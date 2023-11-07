@@ -1,9 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 
+require('dotenv').config();
+// require('./controllers/mongoConnect'); -> mongo connect 확인
+
 const app = express();
 
-const PORT = 4000;
+const { PORT } = process.env;
 
 app.use(cors());
 app.use(express.json());
