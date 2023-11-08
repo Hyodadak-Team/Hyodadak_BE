@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const noticeSchema = new Schema(
     {
+        idx: {
+            type: Number,
+            required: true,
+        },
         title: {
             type: String,
             required: true,
@@ -21,7 +25,7 @@ const noticeSchema = new Schema(
             required: false,
         },
         createTime: {
-            type: String,
+            type: Date,
             required: true,
         }
     },

@@ -14,9 +14,10 @@ app.use(express.urlencoded({extended:false}));
 
 // Router
 const testRouter = require('./routes/test');
-
+const noticeRouter = require('./routes/notice')
 // Connect Router
 app.use('/test', testRouter);
+app.use('/notice', noticeRouter);
 
 // PORT
 app.listen(PORT, () => {
