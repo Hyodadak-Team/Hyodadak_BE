@@ -30,6 +30,7 @@ const registerPersonal = async (req, res) => {
     });
     await user.save();
     res.send("저장 성공");
+    next();
     return res.json({ registerSuccess: true });
   } catch (error) {
     return res.json({ registerSuccess: false, message: error.message });
@@ -55,7 +56,6 @@ const registerMember = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     const user = new User({
       id,
-      phone,
       password: hashedPassword,
     });
     await user.save();
@@ -105,8 +105,14 @@ const loginUser = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  const { token } = req.body;
+  res.json({ message: "로그아웃 성공" });
+};
+
 module.exports = {
   registerPersonal,
   registerMember,
   loginUser,
+  logoutUser,
 };
