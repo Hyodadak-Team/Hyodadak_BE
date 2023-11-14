@@ -1,6 +1,6 @@
-const monoose = require("mongoose");
+const mongoose = require("mongoose");
 
-const { Schema } = monoose;
+const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
