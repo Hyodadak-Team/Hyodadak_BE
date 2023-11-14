@@ -596,6 +596,19 @@ const getAllNotices = async(req, res) => {
     }
 }
 
+const selectNoticeOne = async (req, res) => {
+    try {
+        const noticeOne = await Notice.findOne({
+            _id: req.params.id
+        });
+        if(!noticeOne) return res.status(400).json("해당 공지 없음");
+        console.log(noticeOne);
+        return res.status(200).json(noticeOne);
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
 module.exports = {
-    init,getAllNotices
+    init, getAllNotices, selectNoticeOne
 }
