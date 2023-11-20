@@ -154,7 +154,6 @@ const init = async(req, res) => {
 const getAllBoards = async (req, res) => {
     try{
         const allBoards = await Board.find({});
-        console.log(allBoards)
         return res.render('board', { boards: allBoards}); // test
         // return res.status(200).json(allBoards); // api
     }catch(err){
@@ -163,22 +162,10 @@ const getAllBoards = async (req, res) => {
     }
 }
 
-const selectBoardOne = async (req, res) => {
-    try{
-        const boardOne = await Board.findOne({
-            _id: req.params.id
-        })
-        if(!boardOne)return res.status(400).json("해당 공지 없음");
-        console.log(boardOne);
-        return res.render('detail', {board : boardOne}); // test
-        // return res.status(200).json(boardOne); // api
-    }catch(err){
-        console.log(err);
-        res.status(500).json("오류 발생");
-    }
-}
+
 
 // board
+// c
 const createBoard = async (req, res) => {
     try{
         const {
@@ -203,7 +190,6 @@ const createBoard = async (req, res) => {
             board_access,
             board_point,
             writer_id,
-            selected_answer: {}
         })
         if(!board) return res.status(400).json('board 생성 실패');
         return res.status(200).json('board 생성 성공');
@@ -213,6 +199,37 @@ const createBoard = async (req, res) => {
         res.status(500).json("오류 발생");
     }
 }
+// r
+const selectBoardOne = async (req, res) => {
+    try{
+        const boardOne = await Board.findOne({
+            _id: req.params.id
+        })
+        if(!boardOne)return res.status(400).json("해당 공지 없음");
+
+        const modifyBoard = await Board.updateOne(
+            {
+                _id: req.params.id,
+            },{
+                $set:
+                    {
+                        views: boardOne.views + 1
+                    }
+            }
+        )
+        if(!modifyBoard) return res.status(400).json('board 수정 실패');
+        console.log(modifyBoard);
+        boardOne.views += 1;
+        return res.render('detail', {board : boardOne}); // test
+        // return res.status(200).json(boardOne); // api
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+// u
+
 
 // board - answer
 const addAnswer = async (req, res) => {
@@ -244,7 +261,7 @@ const addAnswer = async (req, res) => {
                     }
             },
         );
-        if(!modifyBoard) return res.status(400).json('answer 추가 실패');
+        // if(!modifyBoard) return res.status(400).json('answer 추가 실패');
         return res.status(200).json('answer 추가 성공');
 
     }catch(err){
@@ -278,10 +295,13 @@ const addComment = async (req, res) => {
                 ...answers[index].comments,
                 {
                     user_id,
-                    comments_contents
+                    comments_contents,
+                    comments_create_time : Date.now(),
+
                 }
             ]
         }
+        console.log(answers);
         const modifyBoard = await Board.updateOne(
             {
                 _id: req.params.id,
