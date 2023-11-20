@@ -8,11 +8,24 @@ const bcrypt = require("bcrypt");
 //유저 로그인시 데이터를 받기 위한 전역변수
 let isNormalUserLogined = false;
 let userID;
+
+const saltRounds = 10;
 const { ACCESS_SECRET } = process.env;
 
-const registerPersonal = async (req, res) => {
+const userList = [
+  {
+    user_name: "dbswp",
+    user_phone: "01095567378",
+    user_id: "nhd2010",
+    user_password: "asdf",
+  },
+];
+
+const joinPersonal = async (req, res) => {
   try {
-    const { name, phone } = req.body;
+    const { joinState } = req.body;
+    const name = joinState.user_name;
+    const phone = joinState.user_phone;
     // 빈값이 오면 팅겨내기
     if (name === "" || phone === "") {
       return res.json({ registerSuccess: false, message: "정보를 입력하세요" });
@@ -24,12 +37,10 @@ const registerPersonal = async (req, res) => {
         message: "이미 존재하는 번호입니다.",
       });
     }
-    const user = new User({
-      name,
-      phone,
+    const user = new User.insertMany({
+      userList,
     });
-    await user.save();
-    res.send("저장 성공");
+    if (!user) return res.status(400).json("실패");
     next();
     return res.json({ registerSuccess: true });
   } catch (error) {
@@ -37,7 +48,7 @@ const registerPersonal = async (req, res) => {
   }
 };
 
-const registerMember = async (req, res) => {
+const joinMember = async (req, res) => {
   try {
     const { id, password, passwordCheck } = req.body;
     // 빈값이 오면 팅겨내기
@@ -111,8 +122,8 @@ const logoutUser = async (req, res) => {
 };
 
 module.exports = {
-  registerPersonal,
-  registerMember,
+  joinPersonal,
+  joinMember,
   loginUser,
   logoutUser,
 };

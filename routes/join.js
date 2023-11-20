@@ -1,12 +1,9 @@
 const express = require("express");
 
-const {
-  registerPersonal,
-  registerMember,
-} = require("../controllers/userConnect");
+const { joinPersonal, joinMember } = require("../controllers/userConnect");
 const router = express.Router();
 
-router.post("/join", registerPersonal, registerMember);
+router.post("/", joinPersonal, joinMember);
 // router.post(
 //   "/registerpersonal",
 //   (req, res, next) => {
