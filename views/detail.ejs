@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>detail !!</div>
+    <div>
+        <h1>선택한 board info</h1>
+        <div>
+            제목 : <%=board.board_title%>
+        </div>
+        <div>
+            내용 : <%=board.board_contents%>
+        </div>
+        <div>
+            공개 : <%=board.board_access%>
+        </div>
+        <div>
+            카테고리 :
+            <%board.board_category.map((category) => {%>
+            <%=category%>
+            <%})%>
+        </div>
+        <div>
+            포인트 : <%=board.board_point%>
+        </div>
+        <div>
+            이미지 :
+            <%board.board_img.map((img) => {%>
+            <%=img%>
+            <%})%>
+        </div>
+        <div>
+            작성자 : <%=board.writer_id%>
+        </div>
+        <div>
+            생성날짜 : <%=board.create_time%>
+        </div>
+        <div>
+            채택여부 : <%=board.status%>
+        </div>
+        <div>
+            조회수 : <%=board.views%>
+        </div>
+        <br/>
+        <br/>
+        <h1>answer</h1>
+        <h2><%=board.answers.length%>개 answer 존재</h2>
+        <%board.answers.map((answer, index) => { %>
+            <div>
+                <hr/>
+                <h2><%=index + 1%> 번째 answer</h2>
+                <div>
+                    답변 작성자 : <%=answer.user_id%>
+                </div>
+                <div>
+                    답변 내용 : <%=answer.answers_contents%>
+                </div>
+                <div>
+                    답변 생성날짜 : <%=answer.answers_create_time%>
+                </div>
+                <br/>
+                <div>
+                    <h3>--<%=answer.comments.length%> 개 댓글 존재--</h3>
+                    <%answer.comments.map((comment, index) => { %>
+                        <div>
+                            <h3><%=index + 1%> 번째 댓글</h3>
+                            <div>
+                                댓글 작성자 : <%=comment.user_id%>
+                            </div>
+                            <div>
+                                댓글 내용 : <%=comment.comments_contents%>
+                            </div>
+                            <div>
+                                댓글 생성날짜 : <%=comment.comments_create_time%>
+                            </div>
+                        </div>
+                    <%})%>
+                </div>
+                <hr/>
+            </div>
+
+        <%})%>
+    </div>
+
+</body>
+</html>
