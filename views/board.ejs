@@ -62,6 +62,42 @@
     <%})%>
 
     <% } %>
+    <br />
+    <br />
+    <br />
+    <br />
+    <hr/>
+    <hr/>
+    <div>
+        <h1>board 생성</h1>
+        <div>
+            제목 :
+            <input class="title" type="text" placeholder="제목"/>
+        </div>
+        <div>
+            내용 :
+            <input class="contents" type="text" placeholder="내용"/>
+        </div>
+        <div>
+            카테고리 :
+            <input class="category" type="text" placeholder="카테고리"/>
+        </div>
+        <div>
+            공개 범위
+            <input class="access" type="radio" value="public" checked> public
+            <input class="access" type="radio" value="private"> private
+        </div>
+        <div>
+            포인트
+            <input class="point" type="number" placeholder="숫자만가능">
+        </div>
+        <div>
+            작성자
+            <input class="user_id" type="text" placeholder="작성자 아이디">
+        </div>
+        <button onclick=createBoard()>board 생성</button>
+    </div>
+
 </body>
 </html>
 
@@ -87,12 +123,47 @@
             headers: {
                 'Content-type': 'application/json'
             },
+
         });
 
         if(res.status === 200){
             location.href=`/board/detail/${id}`;
         }else{
             alert("오류");
+        }
+    }
+
+    const createBoard = async () => {
+        const board_title = document.querySelector(".title").value;
+        const board_contents = document.querySelector(".contents").value;
+        const board_category = document.querySelector(".category").value;
+        const board_access = Array.from(document.querySelectorAll(".access")).find(radio => radio.checked).value;
+        const board_point = document.querySelector(".point").value;
+        const writer_id = document.querySelector(".user_id").value;
+        const res = await fetch(`/board/create-board`, {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                board_title,
+                board_contents,
+                board_category,
+                board_access,
+                board_point,
+                writer_id,
+            }),
+        });
+        if(res.status===200){
+            alert("생성 완료");
+            location.reload();
+
+        }else if(res.status === 400){
+            alert("생성 실패");
+            location.reload();
+        }else if(res.status===500){
+            alert("오류 발생");
+            location.reload();
         }
     }
 </script>
