@@ -6,7 +6,7 @@ const {
 } = require("../controllers/userConnect");
 const router = express.Router();
 
-router.post("/registerpersonal", registerPersonal, registerMember);
+router.post("/join", registerPersonal, registerMember);
 // router.post(
 //   "/registerpersonal",
 //   (req, res, next) => {
