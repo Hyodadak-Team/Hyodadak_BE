@@ -65,7 +65,7 @@
                 <br/>
                 <div>
                     <h3>--<%=answer.comments.length%> 개 댓글 존재--</h3>
-                    <%answer.comments.map((comment, index) => { %>
+                    <%answer.comments.map((comment, idx) => { %>
                         <div>
                             <h3><%=index + 1%> 번째 댓글</h3>
                             <div>
@@ -79,12 +79,96 @@
                             </div>
                         </div>
                     <%})%>
+                    <h3>-- 댓글 추가--</h3>
+                    <div>
+                        <div>
+                            내용 :
+                            <input class="contents2" type="text" placeholder="내용"/>
+                        </div>
+                        <div>
+                            작성자
+                            <input class="user_id2" type="text" placeholder="작성자 아이디">
+                        </div>
+                        <button onclick=addComment(`<%=board._id%>`,`<%=index%>`)>comment 추가</button>
+                    </div>
                 </div>
                 <hr/>
             </div>
 
         <%})%>
     </div>
-
+    <br />
+    <br />
+    <br />
+    <br />
+    <hr/>
+    <hr/>
+    <div>
+        <h1>answer 추가</h1>
+        <div>
+            내용 :
+            <input class="contents" type="text" placeholder="내용"/>
+        </div>
+        <div>
+            작성자
+            <input class="user_id" type="text" placeholder="작성자 아이디">
+        </div>
+    </div>
+    <button onclick=addAnswer(`<%=board._id%>`)>answer 추가</button>
 </body>
 </html>
+
+<script defer>
+    const addAnswer = async (id) => {
+        const user_id = document.querySelector(".user_id").value;
+        const answers_contents = document.querySelector(".contents").value;
+        const res = await fetch(`/board/add-answer/${id}`, {
+            method: 'put',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id,
+                answers_contents,
+            }),
+        });
+        if(res.status===200){
+            alert("생성 완료");
+            location.reload();
+
+        }else if(res.status === 400){
+            alert("생성 실패");
+            location.reload();
+        }else if(res.status===500){
+            alert("오류 발생");
+            location.reload();
+        }
+
+    }
+    const addComment = async (id, index) => {
+        const user_id = document.querySelector(".user_id2").value;
+        const comments_contents = document.querySelector(".contents2").value;
+        const res = await fetch(`/board/add-comment/${id}/${ index }`, {
+            method: 'put',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id,
+                comments_contents,
+            }),
+        });
+        if(res.status===200){
+            alert("생성 완료");
+            location.reload();
+
+        }else if(res.status === 400){
+            alert("생성 실패");
+            location.reload();
+        }else if(res.status===500){
+            alert("오류 발생");
+            location.reload();
+        }
+
+    }
+</script>

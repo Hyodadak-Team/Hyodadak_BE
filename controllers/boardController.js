@@ -178,6 +178,132 @@ const selectBoardOne = async (req, res) => {
     }
 }
 
+// board
+const createBoard = async (req, res) => {
+    try{
+        const {
+            board_title, // string, required
+            board_contents, // string, required
+            board_category, // array, required
+            board_access, // string, required
+            board_point, // number, required
+            // board_img // array, default : [] -> * 추가 구현 필요 *
+            writer_id, // string, required
+            // create_time // date, default : Date.now()
+            // status // string, default : "wait"
+            // answers // array, default : []
+            // selected_answer // object, default : {}
+            // views // number, default : 0
+        } = req.body;
+
+        const board = await Board.create({
+            board_title,
+            board_contents,
+            board_category,
+            board_access,
+            board_point,
+            writer_id,
+            selected_answer: {}
+        })
+        if(!board) return res.status(400).json('board 생성 실패');
+        return res.status(200).json('board 생성 성공');
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+// board - answer
+const addAnswer = async (req, res) => {
+    try{
+        const {
+            user_id,
+            answers_contents,
+
+        } = req.body;
+        const board = await Board.findOne({
+            _id: req.params.id
+        })
+        if(!board) return res.status(400).json("answer 추가 실패");
+
+        const modifyBoard = await Board.updateOne(
+            {
+                _id: req.params.id,
+            },
+            { $set:
+                    { answers:
+                            [...board.answers,
+                                {
+                                    user_id,
+                                    answers_contents,
+                                    answers_create_time : Date.now(),
+                                    comments : []
+                                }
+                            ]
+                    }
+            },
+        );
+        if(!modifyBoard) return res.status(400).json('answer 추가 실패');
+        return res.status(200).json('answer 추가 성공');
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+// board - answer - comment
+const addComment = async (req, res) => {
+    try{
+        const {
+            user_id,
+            comments_contents,
+
+        } = req.body;
+        const board = await Board.findOne({
+            _id: req.params.id
+        })
+
+        if(!board) return res.status(400).json("comments 추가 실패");
+        const index = req.params.index;
+        const answers = [
+            ...board.answers
+        ]
+        answers[index] = {
+            user_id : answers[index].user_id,
+            answers_contents : answers[index].answers_contents,
+            answers_create_time : answers[index].answers_create_time,
+            comments : [
+                ...answers[index].comments,
+                {
+                    user_id,
+                    comments_contents
+                }
+            ]
+        }
+        const modifyBoard = await Board.updateOne(
+            {
+                _id: req.params.id,
+            },
+            { $set:
+                    {
+                        answers:[...answers]
+                    }
+            },
+        );
+        if(!modifyBoard) return res.status(400).json('comments 추가 실패');
+        return res.status(200).json('comments 추가 성공');
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
 module.exports = {
-    init, getAllBoards, selectBoardOne
+    init, getAllBoards, selectBoardOne,
+    createBoard,
+    addAnswer,
+    addComment
 }
