@@ -23,6 +23,6 @@ router.post('/create-board', createBoard);
 router.put('/add-answer/:id', addAnswer);
 
 //
-router.put('add-commnet/:id/:index', addComment);
+router.put('/add-comment/:id/:index', addComment);
 
 module.exports = router;
