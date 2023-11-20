@@ -13,7 +13,7 @@ const boardSchema = new Schema(
             required: true,
         },
         board_category: {
-            type: String,
+            type: Array,
             required: true,
         },
         board_access: {
@@ -25,8 +25,9 @@ const boardSchema = new Schema(
             required: true,
         },
         board_img: {
-            type: String,
-            required: false,
+            type: Array,
+            required: true,
+            default:[],
         },
         writer_id: {
             type: String,
@@ -35,22 +36,27 @@ const boardSchema = new Schema(
         create_time: {
             type: Date,
             required: true,
+            default: Date.now(),
         },
         status : {
             type: String,
             required: true,
+            default : "wait",
         },
-        answer: {
+        answers: {
             type: Array,
-            required: false,
+            required: true,
+            default : [],
         },
         selected_answer: {
             type: Object,
-            required: false,
+            required: true,
+            default: {},
         },
         views: {
             type: Number,
-            required: false,
+            required: true,
+            default: 0,
         }
     },
     {

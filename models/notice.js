@@ -35,4 +35,4 @@ const noticeSchema = new Schema(
     }
 )
 
-module.exports = mongoose.model('Board', noticeSchema);
+module.exports = mongoose.model('Notice', noticeSchema);

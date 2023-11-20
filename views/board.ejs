@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <% if(boards.length === 0) {%>
+    <div>null !!</div>
+    <button class="init_btn" onclick=init()>생성 버튼</button>
+    <% } else {%>
+    <div>hi !!</div>
+    <%boards.map((board, index) => { %>
+        <hr />
+        <br />
+        <br />
+        <div>
+            <div>
+                <div>
+                    제목 : <%=board.board_title%>
+                </div>
+                <div>
+                    내용 : <%=board.board_contents%>
+                </div>
+                <div>
+                    공개 : <%=board.board_access%>
+                </div>
+                <div>
+                    카테고리 :
+                    <%board.board_category.map((category) => {%>
+                        <%=category%>
+                    <%})%>
+                </div>
+                <div>
+                    포인트 : <%=board.board_point%>
+                </div>
+                <div>
+                    이미지 :
+                    <%board.board_img.map((img) => {%>
+                        <%=img%>
+                    <%})%>
+                </div>
+                <div>
+                    작성자 : <%=board.writer_id%>
+                </div>
+                <div>
+                    생성날짜 : <%=board.create_time%>
+                </div>
+                <div>
+                    채택여부 : <%=board.status%>
+                </div>
+                <div>
+                    조회수 : <%=board.views%>
+                </div>
+            </div>
+            <button onclick=selectOne(`<%=board._id%>`)>디테일 </button>
+        </div>
+        <br />
+        <br />
+        <hr />
+    <%})%>
+
+    <% } %>
+</body>
+</html>
+
+<script defer>
+    const init = async () => {
+        const res = await fetch('/board/init', {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json'
+            },
+        });
+
+        if(res.status === 200){
+            alert("ㄱㄱ");
+        }else{
+            alert("오류");
+        }
+    }
+
+    const selectOne = async (id) => {
+        const res = await fetch(`/board/detail/${id}`, {
+            method: 'get',
+            headers: {
+                'Content-type': 'application/json'
+            },
+        });
+
+        if(res.status === 200){
+            location.href=`/board/detail/${id}`;
+        }else{
+            alert("오류");
+        }
+    }
+</script>
