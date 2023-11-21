@@ -1,16 +1,9 @@
 const express = require("express");
 
-const { joinPersonal, joinMember } = require("../controllers/userConnect");
+const { joinPersonal, inituser } = require("../controllers/userConnect");
 const router = express.Router();
 
-router.post("/", joinPersonal, joinMember);
-// router.post(
-//   "/registerpersonal",
-//   (req, res, next) => {
-//     next();
-//   },
-//   registerMember
-// );
-// router.post("/registermember", registerMember);
+router.post("/init", inituser);
+router.post("/", joinPersonal);
 
 module.exports = router;

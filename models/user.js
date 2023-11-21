@@ -63,7 +63,7 @@ const userSchema = new Schema(
       default: [],
     },
     //프로필 이미지
-    partner_info: {
+    partner_image: {
       type: String,
       required: false,
     },
