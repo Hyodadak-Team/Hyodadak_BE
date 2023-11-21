@@ -55,6 +55,8 @@
                 </div>
             </div>
             <button onclick=selectOne(`<%=board._id%>`)>디테일 </button>
+            <br/>
+            <button onclick=deleteOne(`<%=board._id%>`)>삭제 </button>
         </div>
         <br />
         <br />
@@ -96,6 +98,7 @@
             <input class="user_id" type="text" placeholder="작성자 아이디">
         </div>
         <button onclick=createBoard()>board 생성</button>
+
     </div>
 
 </body>
@@ -118,8 +121,8 @@
     }
 
     const selectOne = async (id) => {
-        const res = await fetch(`/board/detail/${id}`, {
-            method: 'get',
+        const res = await fetch(`/board/increase-views/${id}`, {
+            method: 'put',
             headers: {
                 'Content-type': 'application/json'
             },
@@ -131,6 +134,23 @@
         }else{
             alert("오류");
         }
+    }
+    const deleteOne = async (id) => {
+        if(confirm("삭제?")){
+            const res = await fetch(`/board/delete/${id}`, {
+                method: 'delete',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+            });
+
+            if(res.status === 200){
+                location.reload();
+            }else{
+                alert("오류");
+            }
+        }
+
     }
 
     const createBoard = async () => {

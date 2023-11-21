@@ -2,8 +2,8 @@ const express = require('express');
 
 const
     {
-        init, getAllBoards, selectBoardOne,
-        createBoard,
+        init, getAllBoards,
+        createBoard, selectBoardOne, increaseViews, deleteBoardOne,
         addAnswer,
         addComment
     } = require('../controllers/boardController')
@@ -14,10 +14,11 @@ router.post('/init', init);
 
 router.get('/all', getAllBoards); // all
 
-router.get('/detail/:id', selectBoardOne);
-
 // board
 router.post('/create-board', createBoard);
+router.get('/detail/:id', selectBoardOne);
+router.put('/increase-views/:id', increaseViews);
+router.delete('/delete/:id', deleteBoardOne);
 
 // answer
 router.put('/add-answer/:id', addAnswer);

@@ -206,20 +206,6 @@ const selectBoardOne = async (req, res) => {
             _id: req.params.id
         })
         if(!boardOne)return res.status(400).json("해당 공지 없음");
-
-        const modifyBoard = await Board.updateOne(
-            {
-                _id: req.params.id,
-            },{
-                $set:
-                    {
-                        views: boardOne.views + 1
-                    }
-            }
-        )
-        if(!modifyBoard) return res.status(400).json('board 수정 실패');
-        console.log(modifyBoard);
-        boardOne.views += 1;
         // return res.render('detail', {board : boardOne}); // test
         return res.status(200).json(boardOne); // api
     }catch(err){
@@ -229,7 +215,47 @@ const selectBoardOne = async (req, res) => {
 }
 
 // u
+const increaseViews = async (req, res ) => {
+    try{
+        const board = await Board.findOne({
+            _id: req.params.id
+        })
+        if(!board) return res.status(400).json("해당 board 찾기 실패");
+        const modifyBoard = await Board.updateOne(
+            {
+                _id: req.params.id,
+            },{
+                $set:
+                    {
+                        views: board.views + 1
+                    }
+            }
+        )
+        if(modifyBoard.modifiedCount !== 1){
+            console.log(modifyBoard.modifiedCount)
+            return res.status(400).json('board 수정 실패');
+        }
+        return res.status(200).json("조회수 올리기 성공");
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
 
+const deleteBoardOne = async (req, res) => {
+    try{
+        const deleteBoard = await Board.deleteOne({
+            _id : req.params.id
+        })
+        if(deleteBoard.deletedCount !== 1){
+            console.log(deleteBoard.deletedCount);
+            return res.status(200).json("board 지우기 실패")
+        }
+        return res.status(200).json("board 지우기 성공");
+    }catch(err){
+        console.log(err);
+    }
+}
 
 // board - answer
 const addAnswer = async (req, res) => {
@@ -322,8 +348,8 @@ const addComment = async (req, res) => {
 }
 
 module.exports = {
-    init, getAllBoards, selectBoardOne,
-    createBoard,
+    init, getAllBoards,
+    createBoard, selectBoardOne, increaseViews, deleteBoardOne,
     addAnswer,
     addComment
 }
