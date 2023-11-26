@@ -34,18 +34,18 @@ const userSchema = new Schema(
     // 소개글
     user_intro: {
       type: String,
-      required: true,
+      required: false,
     },
     // 레벨
     user_level: {
       type: Number,
-      reqiured: true,
+      reqiured: false,
       default: 0,
     },
     // 관심사
     interser_category: {
       type: Array,
-      required: true,
+      required: false,
       default: [],
     },
     //요청 파트너
@@ -59,7 +59,7 @@ const userSchema = new Schema(
     //파트너 정보
     partner_info: {
       type: Array,
-      required: true,
+      required: false,
       default: [],
     },
     //프로필 이미지
@@ -78,7 +78,7 @@ const userSchema = new Schema(
     //시뮬레이션 상태
     simulation: {
       type: Object,
-      required: true,
+      required: false,
       default: {},
     },
     //내 답변
@@ -88,7 +88,7 @@ const userSchema = new Schema(
     //나의 채택된 답변 개수
     selected_answer: {
       type: Number,
-      required: true,
+      required: false,
       default: 0,
     },
   },

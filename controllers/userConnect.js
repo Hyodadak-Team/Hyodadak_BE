@@ -25,7 +25,7 @@ const userList = [
     request_partner: "",
     response_partner: "",
     partner_info: "",
-    partner_image: "",
+    partner_image: "", // m1,m2 이런식
     my_comment: "",
     my_question: "",
     my_answer: "",
