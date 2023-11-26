@@ -53,11 +53,11 @@ const joinPersonal = async (req, res) => {
     const password = joinState.user_password;
     const type = joinState.user_type;
 
+    console.log(type);
     console.log(name);
     console.log(phone);
     console.log(id);
     console.log(password);
-    console.log(type);
 
     // 빈값이 오면 팅겨내기
     if (name === "" || phone === "") {
