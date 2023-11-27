@@ -57,11 +57,14 @@
                     답변 작성자 : <%=answer.user_id%>
                 </div>
                 <div>
-                    답변 내용 : <%=answer.answers_contents%>
+                    답변 내용 : <%=answer.answer_contents%>
                 </div>
                 <div>
-                    답변 생성날짜 : <%=answer.answers_create_time%>
+                    답변 생성날짜 : <%=answer.answer_create_time%>
                 </div>
+                <button onclick=selectAnswerOne(`<%=board._id%>`,`<%=answer._id%>`)>answer 가져오기</button>
+                <br/>
+                <button onclick=deleteAnswerOne(`<%=board._id%>`,`<%=answer._id%>`)>answer 삭제</button>
                 <br/>
                 <div>
                     <h3>--<%=answer.comments.length%> 개 댓글 존재--</h3>
@@ -72,10 +75,10 @@
                                 댓글 작성자 : <%=comment.user_id%>
                             </div>
                             <div>
-                                댓글 내용 : <%=comment.comments_contents%>
+                                댓글 내용 : <%=comment.comment_contents%>
                             </div>
                             <div>
-                                댓글 생성날짜 : <%=comment.comments_create_time%>
+                                댓글 생성날짜 : <%=comment.comment_create_time%>
                             </div>
                         </div>
                     <%})%>
@@ -121,7 +124,7 @@
 <script defer>
     const addAnswer = async (id) => {
         const user_id = document.querySelector(".user_id").value;
-        const answers_contents = document.querySelector(".contents").value;
+        const answer_contents = document.querySelector(".contents").value;
         const res = await fetch(`/board/add-answer/${id}`, {
             method: 'put',
             headers: {
@@ -129,7 +132,7 @@
             },
             body: JSON.stringify({
                 user_id,
-                answers_contents,
+                answer_contents,
             }),
         });
         if(res.status===200){
@@ -145,9 +148,38 @@
         }
 
     }
+
+    const selectAnswerOne = async (board_id, answer_id) => {
+        const res = await fetch(`/board/select-answer/${board_id}/${answer_id}`, {
+            method : 'get',
+            headers: {
+                'Content-type': 'application/json'
+            },
+        })
+    }
+
+    const deleteAnswerOne = async (board_id, answer_id) => {
+        const res = await fetch(`/board/delete-answer/${board_id}/${answer_id}`, {
+            method : 'put',
+            headers: {
+                'Content-type': 'application/json'
+            },
+        })
+
+        if(res.status === 200){
+            alert("answer 삭제완료");
+            location.reload();
+        }else if(res.status === 400){
+            alert("answer 삭제실패");
+            location.reload();
+        }else{
+            alert("오류요");
+            location.reload();
+        }
+    }
     const addComment = async (id, index) => {
         const user_id = document.querySelector(".user_id2").value;
-        const comments_contents = document.querySelector(".contents2").value;
+        const comment_contents = document.querySelector(".contents2").value;
         const res = await fetch(`/board/add-comment/${id}/${ index }`, {
             method: 'put',
             headers: {
@@ -155,7 +187,7 @@
             },
             body: JSON.stringify({
                 user_id,
-                comments_contents,
+                comment_contents,
             }),
         });
         if(res.status===200){
