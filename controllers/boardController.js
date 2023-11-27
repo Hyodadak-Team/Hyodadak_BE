@@ -158,8 +158,8 @@ const init = async(req, res) => {
 const getAllBoards = async (req, res) => {
     try{
         const allBoards = await Board.find({});
-        return res.render('board', { boards: allBoards}); // test
-        // return res.status(200).json(allBoards); // api
+        // return res.render('board', { boards: allBoards}); // test
+        return res.status(200).json(allBoards); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
@@ -210,8 +210,8 @@ const selectBoardOne = async (req, res) => {
             _id: req.params.id
         })
         if(!boardOne)return res.status(400).json("해당 공지 없음");
-        return res.render('detail', {board : boardOne}); // test
-        // return res.status(200).json(boardOne); // api
+        // return res.render('detail', {board : boardOne}); // test
+        return res.status(200).json(boardOne); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
@@ -225,8 +225,8 @@ const selectBoardOneToModify = async (req, res) => {
             _id : req.params.id
         })
         if(!boardOne)return res.status(400).json("해당 board 없음");
-        return res.render('board_modify', {board : boardOne}); // test
-        // return res.status(200).json(boardOne); // api
+        // return res.render('board_modify', {board : boardOne}); // test
+        return res.status(200).json(boardOne); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
