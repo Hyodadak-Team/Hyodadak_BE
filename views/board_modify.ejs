@@ -67,5 +67,17 @@
             })
         });
 
+        if(res.status===200){
+            alert("수정 완료");
+            location.href=`/board/detail/${id}`;
+
+        }else if(res.status === 400){
+            alert("수정 실패");
+            location.href=`/board/detail/${id}`;
+        }else if(res.status===500){
+            alert("오류 발생");
+            location.href=`/board/detail/${id}`;
+        }
+
     }
 </script>

@@ -4,7 +4,7 @@ const
     {
         init, getAllBoards,
         createBoard, selectBoardOne, increaseViews, deleteBoardOne,selectBoardOneToModify,modifyBoardOne,
-        addAnswer,
+        addAnswer, selectAnswerOne,deleteAnswerOne, modifyAnswerOne,
         addComment
     } = require('../controllers/boardController')
 
@@ -24,8 +24,11 @@ router.delete('/delete/:id', deleteBoardOne);
 
 // answer
 router.put('/add-answer/:id', addAnswer);
+router.get('/select-answer/:board_id/:answer_id', selectAnswerOne);
+router.put('/delete-answer/:board_id/:answer_id', deleteAnswerOne);
+router.put('/modify-answer/:board_id/:answer_id', modifyAnswerOne);
 
-//
+// comment
 router.put('/add-comment/:id/:index', addComment);
 
 module.exports = router;
