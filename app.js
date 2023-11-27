@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
+const swaggerUi = require('swagger-ui-express');
+
 require("dotenv").config();
 // require('./controllers/mongoConnect'); -> mongo connect 확인
 
@@ -28,6 +30,8 @@ app.use("/notice", noticeRouter);
 app.use("/board", boardRouter);
 
 app.use("/join", registerRouter);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(require('./config/swaggerDoc')));
 // PORT
 app.listen(PORT, () => {
   console.log(`${PORT} 실행 중`);
