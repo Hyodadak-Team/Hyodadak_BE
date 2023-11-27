@@ -5,7 +5,7 @@ const
         init, getAllBoards,
         createBoard, selectBoardOne, increaseViews, deleteBoardOne,selectBoardOneToModify,modifyBoardOne,
         addAnswer, selectAnswerOne,deleteAnswerOne, modifyAnswerOne,
-        addComment
+        addComment, selectCommentOne, deleteCommentOne, modifyCommentOne
     } = require('../controllers/boardController')
 
 const router = express.Router();
@@ -29,6 +29,10 @@ router.put('/delete-answer/:board_id/:answer_id', deleteAnswerOne);
 router.put('/modify-answer/:board_id/:answer_id', modifyAnswerOne);
 
 // comment
-router.put('/add-comment/:id/:index', addComment);
+router.put('/add-comment/:board_id/:answer_id', addComment);
+router.get('/select-comment/:board_id/:answer_id/:comment_id', selectCommentOne);
+router.put('/delete-comment/:board_id/:answer_id/:comment_id', deleteCommentOne);
+router.put('/modify-comment/:board_id/:answer_id/:comment_id', modifyCommentOne);
+
 
 module.exports = router;

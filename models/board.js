@@ -49,9 +49,9 @@ const boardSchema = new Schema(
             default : [],
         },
         selected_answer: {
-            type: Object,
+            type: Array,
             required: true,
-            default: {},
+            default: [],
         },
         views: {
             type: Number,

@@ -23,11 +23,13 @@ const boardList = [
                     answer_create_time : new Date(Date.now()),
                     comments : [
                         {
+                            _id : new ObjectId(),
                             user_id : '1aaaaaa1',
                             comment_contents : '1말이 좀 그렇네요 사과하세요1',
                             comment_create_time : new Date(Date.now()),
                         },
                         {
+                            _id : new ObjectId(),
                             user_id : '1psjj031',
                             comment_contents : '1말을 험하게 했네요 사과합니다.1',
                             comment_create_time : new Date(Date.now()),
@@ -41,11 +43,13 @@ const boardList = [
                     answer_create_time : new Date(Date.now()),
                     comments : [
                         {
+                            _id : new ObjectId(),
                             user_id : '1ccc1',
                             comment_contents : '오 굳',
                             comment_create_time : new Date(Date.now()),
                         },
                         {
+                            _id : new ObjectId(),
                             user_id : '1qkrtjdwo56621',
                             comment_contents : '감사합니다 채택할게요',
                             comment_create_time : new Date(Date.now()),
@@ -53,23 +57,7 @@ const boardList = [
                     ]
                 },
             ],
-        selected_answer : {
-            user_id : '1bbbb1',
-            answers_contents : '1역을 가보세요1',
-            answers_create_time : new Date(Date.now()),
-            comments : [
-                {
-                    user_id : '1ccc1',
-                    comments_contents : '오 굳',
-                    comments_create_time : new Date(Date.now()),
-                },
-                {
-                    user_id : '1qkrtjdwo56621',
-                    comments_contents : '감사합니다 채택할게요',
-                    comments_create_time : new Date(Date.now()),
-                }
-            ]
-        },
+        selected_answer : [],
         views: 0,
     },
     {
@@ -91,11 +79,13 @@ const boardList = [
                     answer_create_time: new Date(Date.now()),
                     comments: [
                         {
+                            _id : new ObjectId(),
                             user_id: '2aaaaaa2',
                             comment_contents: '2말이 좀 그렇네요 사과하세요2',
                             comment_create_time: new Date(Date.now()),
                         },
                         {
+                            _id : new ObjectId(),
                             user_id: '2psjj032',
                             comment_contents: '2말을 험하게 했네요 사과합니다.2',
                             comment_create_time: new Date(Date.now()),
@@ -109,11 +99,13 @@ const boardList = [
                     answer_create_time: new Date(Date.now()),
                     comments: [
                         {
+                            _id : new ObjectId(),
                             user_id: '2ccc2',
                             comment_contents: '오 굳',
                             comment_create_time: new Date(Date.now()),
                         },
                         {
+                            _id : new ObjectId(),
                             user_id: '2qkrtjdwo56622',
                             comment_contents: '감사합니다 채택할게요',
                             comment_create_time: new Date(Date.now()),
@@ -121,23 +113,7 @@ const boardList = [
                     ]
                 },
             ],
-        selected_answer: {
-            user_id: '2bbbb2',
-            answer_contents: '2역을 가보세요2',
-            answer_create_time: new Date(Date.now()),
-            comments: [
-                {
-                    user_id: '2ccc2',
-                    comment_contents: '오 굳',
-                    comment_create_time: new Date(Date.now()),
-                },
-                {
-                    user_id: '2qkrtjdwo56622',
-                    comment_contents: '감사합니다 채택할게요',
-                    comment_create_time: new Date(Date.now()),
-                }
-            ]
-        },
+        selected_answer: [],
         views: 0,
     },
 ]
@@ -158,8 +134,8 @@ const init = async(req, res) => {
 const getAllBoards = async (req, res) => {
     try{
         const allBoards = await Board.find({});
-        return res.render('board', { boards: allBoards}); // test
-        // return res.status(200).json(allBoards); // api
+        // return res.render('board', { boards: allBoards}); // test
+        return res.status(200).json(allBoards); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
@@ -210,8 +186,8 @@ const selectBoardOne = async (req, res) => {
             _id: req.params.id
         })
         if(!boardOne)return res.status(400).json("해당 공지 없음");
-        return res.render('detail', {board : boardOne}); // test
-        // return res.status(200).json(boardOne); // api
+        // return res.render('detail', {board : boardOne}); // test
+        return res.status(200).json(boardOne); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
@@ -225,8 +201,8 @@ const selectBoardOneToModify = async (req, res) => {
             _id : req.params.id
         })
         if(!boardOne)return res.status(400).json("해당 board 없음");
-        return res.render('board_modify', {board : boardOne}); // test
-        // return res.status(200).json(boardOne); // api
+        // return res.render('board_modify', {board : boardOne}); // test
+        return res.status(200).json(boardOne); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
@@ -237,17 +213,17 @@ const selectBoardOneToModify = async (req, res) => {
 // u
 const increaseViews = async (req, res ) => {
     try{
-        const board = await Board.findOne({
+        const boardOne = await Board.findOne({
             _id: req.params.id
         })
-        if(!board) return res.status(400).json("해당 board 찾기 실패");
+        if(!boardOne) return res.status(400).json("해당 board 찾기 실패");
         const modifyBoard = await Board.updateOne(
             {
                 _id: req.params.id,
             },{
                 $set:
                     {
-                        views: board.views + 1
+                        views: boardOne.views + 1
                     }
             }
         )
@@ -293,10 +269,7 @@ const deleteBoardOne = async (req, res) => {
         const deleteBoard = await Board.deleteOne({
             _id : req.params.id
         })
-        if(deleteBoard.deletedCount !== 1){
-            console.log(deleteBoard.deletedCount);
-            return res.status(200).json("board 지우기 실패")
-        }
+        if(deleteBoard.deletedCount !== 1) return res.status(200).json("board 지우기 실패")
         return res.status(200).json("board 지우기 성공");
     }catch(err){
         console.log(err);
@@ -313,10 +286,10 @@ const addAnswer = async (req, res) => {
             answer_contents,
 
         } = req.body;
-        const board = await Board.findOne({
+        const boardOne = await Board.findOne({
             _id: req.params.id
         })
-        if(!board) return res.status(400).json("answer 추가 실패");
+        if(!boardOne) return res.status(400).json("answer 추가 실패");
 
         const modifyBoard = await Board.updateOne(
             {
@@ -324,7 +297,7 @@ const addAnswer = async (req, res) => {
             },
             { $set:
                     { answers:
-                            [...board.answers,
+                            [...boardOne.answers,
                                 {
                                     _id : new ObjectId(),
                                     user_id,
@@ -440,48 +413,52 @@ const deleteAnswerOne = async (req, res ) => {
 }
 
 // board - answer - comment
+// c
 const addComment = async (req, res) => {
     try{
+        const { board_id, answer_id } = req.params;
         const {
             user_id,
             comment_contents,
-
         } = req.body;
-        const board = await Board.findOne({
-            _id: req.params.id
-        })
 
-        if(!board) return res.status(400).json("comments 추가 실패");
-        const index = req.params.index;
-        const answers = [
-            ...board.answers
-        ]
-        answers[index] = {
-            user_id : answers[index].user_id,
-            answer_contents : answers[index].answer_contents,
-            answer_create_time : answers[index].answer_create_time,
+        // board 찾고
+        const boardOne = await Board.findOne({
+            _id: board_id
+        })
+        if(!boardOne) return res.status(400).json("해당 board 없음");
+
+        // answer 찾고
+        const answers = boardOne.answers;
+        const answerIndex = answers.findIndex((answer) => answer._id.equals(answer_id))
+        if(!answerIndex) return res.status(400).json("해당 answer 없음");
+
+        // 해당 answer comment 추가 해주고
+        answers[answerIndex] = {
+            ...answers[answerIndex],
             comments : [
-                ...answers[index].comments,
+                ...answers[answerIndex].comments,
                 {
+                    _id : new ObjectId(),
                     user_id,
                     comment_contents,
-                    comment_create_time : new Date(Date.now()),
-
+                    comment_create_time: new Date(Date.now()),
                 }
             ]
         }
-        console.log(answers);
+
         const modifyBoard = await Board.updateOne(
             {
-                _id: req.params.id,
+                _id: board_id,
             },
             { $set:
                     {
-                        answers:[...answers]
+                        answers: [...answers]
                     }
             },
         );
-        if(!modifyBoard) return res.status(400).json('comments 추가 실패');
+
+        if(modifyBoard.modifiedCount < 1) return res.status(400).json('comments 추가 실패');
         return res.status(200).json('comments 추가 성공');
 
     }catch(err){
@@ -490,9 +467,139 @@ const addComment = async (req, res) => {
     }
 }
 
+// r
+const selectCommentOne = async (req, res) => {
+    try{
+        const {board_id, answer_id, comment_id} = req.params;
+
+        // board 찾고
+        const boardOne = await Board.findOne({
+            _id: board_id
+        })
+        if(!boardOne) return res.status(400).json("해당 board 없음");
+
+        // answer 찾고
+        const answers = boardOne.answers;
+        const answerOne = answers.find((answer) => answer._id.equals(answer_id))
+        if(!answerOne) return res.status(400).json("해당 answer 없음");
+
+        // comment 찾고
+        const comments = answerOne.comments;
+        const commentOne = comments.find((comment) => comment._id.equals(comment_id))
+        if(!commentOne) return res.status(400).json("해당 comment 없음");
+        return res.status(200).json(commentOne);
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+// u
+const modifyCommentOne = async (req, res) => {
+    try{
+        const {board_id, answer_id, comment_id} = req.params;
+        const { comment_content } = req.body;
+        // board 찾고
+        const boardOne = await Board.findOne({
+            _id: board_id
+        })
+        if(!boardOne) return res.status(400).json("해당 board 없음");
+
+        // answer 찾고
+        const answers = boardOne.answers;
+        const answerIndex = answers.findIndex((answer) => answer._id.equals(answer_id));
+        const answerOne = answers.find((answer) => answer._id.equals(answer_id))
+        if(!answerOne || answerIndex === -1) return res.status(400).json("해당 answer 없음");
+
+        // comment 찾고
+        const comments = answerOne.comments;
+        const commentIndex = comments.findIndex((comment) => comment._id.equals(comment_id))
+        if(commentIndex === -1) return res.status(400).json("해당 comment 없음");
+
+        // comment 수정해주고
+        comments[commentIndex] = {
+            ...comments[commentIndex],
+            comment_content
+        }
+
+        // answer에 반영해주고
+        answers[answerIndex] = {
+            ...answers[answerIndex],
+            comments : [...comments]
+        }
+
+        const modifyBoard = await Board.updateOne(
+            {
+                _id: board_id,
+            },
+            { $set:
+                    {
+                        answers: [...answers]
+                    }
+            },
+        );
+        console.log(modifyBoard);
+        if(modifyBoard.modifiedCount < 1) return res.status(400).json('comments 수정 실패');
+        return res.status(200).json('comments 수정 성공');
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+// d
+const deleteCommentOne = async (req, res) => {
+    try{
+        const {board_id, answer_id, comment_id} = req.params;
+
+        // board 찾고
+        const boardOne = await Board.findOne({
+            _id: board_id
+        })
+        if(!boardOne) return res.status(400).json("해당 board 없음");
+
+        // answer 찾고
+        const answers = boardOne.answers;
+        const answerIndex = answers.findIndex((answer) => answer._id.equals(answer_id));
+        const answerOne = answers.find((answer) => answer._id.equals(answer_id))
+        if(!answerOne || answerIndex === -1) return res.status(400).json("해당 answer 없음");
+
+        // comment 찾고
+        const comments = answerOne.comments;
+        const commentIndex = comments.findIndex((comment) => comment._id.equals(comment_id))
+        if(commentIndex === -1) return res.status(400).json("해당 comment 없음");
+
+        // comment 지우고
+        comments.splice(commentIndex, 1);
+        answers[answerIndex] = {
+            ...answers[answerIndex],
+            comments : [...comments]
+        }
+
+        const modifyBoard = await Board.updateOne(
+            {
+                _id: board_id,
+            },
+            { $set:
+                    {
+                        answers: [...answers]
+                    }
+            },
+        );
+        console.log(modifyBoard);
+        if(modifyBoard.modifiedCount < 1) return res.status(400).json('comments 삭제 실패');
+        return res.status(200).json('comments 삭제 성공');
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
 module.exports = {
     init, getAllBoards,
     createBoard, selectBoardOne, increaseViews, deleteBoardOne, selectBoardOneToModify, modifyBoardOne,
     addAnswer, selectAnswerOne, deleteAnswerOne, modifyAnswerOne,
-    addComment
+    addComment, selectCommentOne, deleteCommentOne, modifyCommentOne,
 }
