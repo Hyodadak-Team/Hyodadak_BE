@@ -46,7 +46,7 @@ const userSchema = new Schema(
     point: {
       type: Number,
       required: false,
-      default: null,
+      default: 0,
     },
     // 관심사
     interest_category: {
@@ -71,12 +71,12 @@ const userSchema = new Schema(
     },
     //내 질문
     my_board_question: {
-      type: Object,
+      type: Array,
       default: null,
     },
     //내 답변
     my_board_answer: {
-      type: Object,
+      type: Array,
       default: null,
     },
     //나의 채택된 답변 개수
