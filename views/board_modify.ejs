@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h1>board 수정</h1>
+<div>
+    <div>
+        제목 :
+        <br/>
+        <textarea class="title"><%=board.board_title%></textarea>
+    </div>
+    <div>
+        내용 :
+        <br/>
+        <textarea class="contents"><%=board.board_contents%></textarea>
+    </div>
+    <div>
+        공개 여부 :
+        <input class="access" type="text" value="<%=board.board_access%>"/>
+    </div>
+    <div>
+        카테고리 :
+        <%board.board_category.map((category) => {%>
+        <input class="category" type="text" value="<%=category%>"/>
+        <%})%>
+    </div>
+    <div>
+        이미지 :
+        <%board.board_img.map((img) => {%>
+        <input class="img" type="text" value="<%=img%>"/>
+        <%})%>
+    </div>
+</div>
+<br/>
+<button onclick=modifyOne(`<%=board._id%>`)>수정 완료</button>
+</body>
+</html>
+
+<script defer>
+    const modifyOne = async (id) => {
+        const board_title = document.querySelector(".title").value;
+        const board_contents = document.querySelector(".contents").value;
+        const board_access = document.querySelector(".access").value;
+        const board_categoryAll = document.querySelectorAll(".category");
+        const board_category = [];
+        const board_imgAll = document.querySelectorAll(".img");
+        const board_img = [];
+
+        board_categoryAll.forEach((category) => board_category.push(category.value));
+        board_imgAll.forEach((img) => board_img.push(img.value));
+
+        const res = await fetch(`/board/modify-board/${id}`, {
+            method: 'put',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                board_title,
+                board_contents,
+                board_category,
+                board_access,
+                board_img
+            })
+        });
+
+    }
+</script>

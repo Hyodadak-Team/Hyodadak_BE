@@ -57,10 +57,10 @@
                     답변 작성자 : <%=answer.user_id%>
                 </div>
                 <div>
-                    답변 내용 : <%=answer.answers_contents%>
+                    답변 내용 : <%=answer.answer_contents%>
                 </div>
                 <div>
-                    답변 생성날짜 : <%=answer.answers_create_time%>
+                    답변 생성날짜 : <%=answer.answer_create_time%>
                 </div>
                 <br/>
                 <div>
@@ -72,10 +72,10 @@
                                 댓글 작성자 : <%=comment.user_id%>
                             </div>
                             <div>
-                                댓글 내용 : <%=comment.comments_contents%>
+                                댓글 내용 : <%=comment.comment_contents%>
                             </div>
                             <div>
-                                댓글 생성날짜 : <%=comment.comments_create_time%>
+                                댓글 생성날짜 : <%=comment.comment_create_time%>
                             </div>
                         </div>
                     <%})%>
@@ -121,7 +121,7 @@
 <script defer>
     const addAnswer = async (id) => {
         const user_id = document.querySelector(".user_id").value;
-        const answers_contents = document.querySelector(".contents").value;
+        const answer_contents = document.querySelector(".contents").value;
         const res = await fetch(`/board/add-answer/${id}`, {
             method: 'put',
             headers: {
@@ -129,7 +129,7 @@
             },
             body: JSON.stringify({
                 user_id,
-                answers_contents,
+                answer_contents,
             }),
         });
         if(res.status===200){
@@ -147,7 +147,7 @@
     }
     const addComment = async (id, index) => {
         const user_id = document.querySelector(".user_id2").value;
-        const comments_contents = document.querySelector(".contents2").value;
+        const comment_contents = document.querySelector(".contents2").value;
         const res = await fetch(`/board/add-comment/${id}/${ index }`, {
             method: 'put',
             headers: {
@@ -155,7 +155,7 @@
             },
             body: JSON.stringify({
                 user_id,
-                comments_contents,
+                comment_contents,
             }),
         });
         if(res.status===200){

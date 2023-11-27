@@ -57,6 +57,8 @@
             <button onclick=selectOne(`<%=board._id%>`)>디테일 </button>
             <br/>
             <button onclick=deleteOne(`<%=board._id%>`)>삭제 </button>
+            <br />
+            <button onclick=selectOneToModify(`<%=board._id%>`)>수정하러감 </button>
         </div>
         <br />
         <br />
@@ -135,6 +137,13 @@
             alert("오류");
         }
     }
+
+    const selectOneToModify = async (id) => {
+
+        location.href=`/board/select-modify/${id}`;
+
+    }
+
     const deleteOne = async (id) => {
         if(confirm("삭제?")){
             const res = await fetch(`/board/delete/${id}`, {

@@ -17,36 +17,38 @@ const boardList = [
         answers :
             [
                 {
+                    _id : new ObjectId(),
                     user_id : '1psjj031',
-                    answers_contents : '1고민을 좀 하고 물어보세요1',
-                    answers_create_time : Date.now(),
+                    answer_contents : '1고민을 좀 하고 물어보세요1',
+                    answer_create_time : Date.now(),
                     comments : [
                         {
                             user_id : '1aaaaaa1',
-                            comments_contents : '1말이 좀 그렇네요 사과하세요1',
-                            comments_create_time : Date.now(),
+                            comment_contents : '1말이 좀 그렇네요 사과하세요1',
+                            comment_create_time : Date.now(),
                         },
                         {
                             user_id : '1psjj031',
-                            comments_contents : '1말을 험하게 했네요 사과합니다.1',
-                            comments_create_time : Date.now(),
+                            comment_contents : '1말을 험하게 했네요 사과합니다.1',
+                            comment_create_time : Date.now(),
                         }
                     ]
                 },
                 {
+                    _id : new ObjectId(),
                     user_id : '1bbbb1',
-                    answers_contents : '1역을 가보세요1',
-                    answers_create_time : Date.now(),
+                    answer_contents : '1역을 가보세요1',
+                    answer_create_time : Date.now(),
                     comments : [
                         {
                             user_id : '1ccc1',
-                            comments_contents : '오 굳',
-                            comments_create_time : Date.now(),
+                            comment_contents : '오 굳',
+                            comment_create_time : Date.now(),
                         },
                         {
                             user_id : '1qkrtjdwo56621',
-                            comments_contents : '감사합니다 채택할게요',
-                            comments_create_time : Date.now(),
+                            comment_contents : '감사합니다 채택할게요',
+                            comment_create_time : Date.now(),
                         }
                     ]
                 },
@@ -83,54 +85,56 @@ const boardList = [
         answers:
             [
                 {
+                    _id : new ObjectId(),
                     user_id: '2psjj032',
-                    answers_contents: '2고민을 좀 하고 물어보세요2',
-                    answers_create_time: Date.now(),
+                    answer_contents: '2고민을 좀 하고 물어보세요2',
+                    answer_create_time: Date.now(),
                     comments: [
                         {
                             user_id: '2aaaaaa2',
-                            comments_contents: '2말이 좀 그렇네요 사과하세요2',
-                            comments_create_time: Date.now(),
+                            comment_contents: '2말이 좀 그렇네요 사과하세요2',
+                            comment_create_time: Date.now(),
                         },
                         {
                             user_id: '2psjj032',
-                            comments_contents: '2말을 험하게 했네요 사과합니다.2',
-                            comments_create_time: Date.now(),
+                            comment_contents: '2말을 험하게 했네요 사과합니다.2',
+                            comment_create_time: Date.now(),
                         }
                     ]
                 },
                 {
+                    _id : new ObjectId(),
                     user_id: '2bbbb2',
-                    answers_contents: '2역을 가보세요2',
-                    answers_create_time: Date.now(),
+                    answer_contents: '2역을 가보세요2',
+                    answer_create_time: Date.now(),
                     comments: [
                         {
                             user_id: '2ccc2',
-                            comments_contents: '오 굳',
-                            comments_create_time: Date.now(),
+                            comment_contents: '오 굳',
+                            comment_create_time: Date.now(),
                         },
                         {
                             user_id: '2qkrtjdwo56622',
-                            comments_contents: '감사합니다 채택할게요',
-                            comments_create_time: Date.now(),
+                            comment_contents: '감사합니다 채택할게요',
+                            comment_create_time: Date.now(),
                         }
                     ]
                 },
             ],
         selected_answer: {
             user_id: '2bbbb2',
-            answers_contents: '2역을 가보세요2',
-            answers_create_time: Date.now(),
+            answer_contents: '2역을 가보세요2',
+            answer_create_time: Date.now(),
             comments: [
                 {
                     user_id: '2ccc2',
-                    comments_contents: '오 굳',
-                    comments_create_time: Date.now(),
+                    comment_contents: '오 굳',
+                    comment_create_time: Date.now(),
                 },
                 {
                     user_id: '2qkrtjdwo56622',
-                    comments_contents: '감사합니다 채택할게요',
-                    comments_create_time: Date.now(),
+                    comment_contents: '감사합니다 채택할게요',
+                    comment_create_time: Date.now(),
                 }
             ]
         },
@@ -154,8 +158,8 @@ const init = async(req, res) => {
 const getAllBoards = async (req, res) => {
     try{
         const allBoards = await Board.find({});
-        // return res.render('board', { boards: allBoards}); // test
-        return res.status(200).json(allBoards); // api
+        return res.render('board', { boards: allBoards}); // test
+        // return res.status(200).json(allBoards); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
@@ -206,8 +210,8 @@ const selectBoardOne = async (req, res) => {
             _id: req.params.id
         })
         if(!boardOne)return res.status(400).json("해당 공지 없음");
-        // return res.render('detail', {board : boardOne}); // test
-        return res.status(200).json(boardOne); // api
+        return res.render('detail', {board : boardOne}); // test
+        // return res.status(200).json(boardOne); // api
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
@@ -242,6 +246,52 @@ const increaseViews = async (req, res ) => {
     }
 }
 
+const selectBoardOneToModify = async (req, res) => {
+    try{
+        const boardOne = await Board.findOne({
+            _id : req.params.id
+        })
+        if(!boardOne)return res.status(400).json("해당 공지 없음");
+        return res.render('board_modify', {board : boardOne}); // test
+        // return res.status(200).json(boardOne); // api
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+const modifyBoardOne = async (req, res ) => {
+    try{
+        const {board_title, board_contents, board_category , board_access, board_img} = req.body;
+
+        const modifyBoard = await Board.updateOne(
+            {
+                _id: req.params.id,
+            },{
+                $set:
+                    {
+                        board_title,
+                        board_contents,
+                        board_category,
+                        board_access,
+                        board_img
+                    }
+            }
+        )
+        // console.log(modifyBoard);
+        // if(modifyBoard.modifiedCount !== 1){
+        //     console.log(modifyBoard.modifiedCount)
+        //     return res.status(400).json('board 수정 실패');
+        // }
+        //
+        return res.status(200).json("수정 OK");
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+// d
 const deleteBoardOne = async (req, res) => {
     try{
         const deleteBoard = await Board.deleteOne({
@@ -262,7 +312,7 @@ const addAnswer = async (req, res) => {
     try{
         const {
             user_id,
-            answers_contents,
+            answer_contents,
 
         } = req.body;
         const board = await Board.findOne({
@@ -278,9 +328,10 @@ const addAnswer = async (req, res) => {
                     { answers:
                             [...board.answers,
                                 {
+                                    _id : new ObjectId(),
                                     user_id,
-                                    answers_contents,
-                                    answers_create_time : Date.now(),
+                                    answer_contents,
+                                    answer_create_time : Date.now(),
                                     comments : []
                                 }
                             ]
@@ -301,7 +352,7 @@ const addComment = async (req, res) => {
     try{
         const {
             user_id,
-            comments_contents,
+            comment_contents,
 
         } = req.body;
         const board = await Board.findOne({
@@ -315,14 +366,14 @@ const addComment = async (req, res) => {
         ]
         answers[index] = {
             user_id : answers[index].user_id,
-            answers_contents : answers[index].answers_contents,
-            answers_create_time : answers[index].answers_create_time,
+            answer_contents : answers[index].answer_contents,
+            answer_create_time : answers[index].answer_create_time,
             comments : [
                 ...answers[index].comments,
                 {
                     user_id,
-                    comments_contents,
-                    comments_create_time : Date.now(),
+                    comment_contents,
+                    comment_create_time : Date.now(),
 
                 }
             ]
@@ -349,7 +400,7 @@ const addComment = async (req, res) => {
 
 module.exports = {
     init, getAllBoards,
-    createBoard, selectBoardOne, increaseViews, deleteBoardOne,
+    createBoard, selectBoardOne, increaseViews, deleteBoardOne, selectBoardOneToModify, modifyBoardOne,
     addAnswer,
     addComment
 }
