@@ -39,7 +39,7 @@ const userSchema = new Schema(
     // 레벨
     level: {
       type: Number,
-      reqiured: false,
+      required: false,
       default: null,
     },
     //용돈
