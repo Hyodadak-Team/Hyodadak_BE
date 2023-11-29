@@ -1,9 +1,14 @@
 const express = require("express");
 
-const { joinPersonal, inituser } = require("../controllers/userConnect");
+const {
+  // joinPersonal,
+  // initUser,
+  testUser,
+} = require("../controllers/userConnect");
 const router = express.Router();
 
-router.post("/init", inituser);
-router.post("/", joinPersonal);
+// router.post("/init", initUser);
+router.post("/test", testUser);
+// router.post("/", joinPersonal);
 
 module.exports = router;

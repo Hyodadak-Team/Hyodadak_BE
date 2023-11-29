@@ -32,64 +32,64 @@ const userSchema = new Schema(
       required: true,
     },
     // 소개글
-    user_intro: {
+    intro: {
       type: String,
       required: false,
     },
     // 레벨
-    user_level: {
+    level: {
       type: Number,
-      reqiured: false,
+      required: false,
+      default: null,
+    },
+    //용돈
+    point: {
+      type: Number,
+      required: false,
       default: 0,
     },
     // 관심사
-    interser_category: {
+    interest_category: {
       type: Array,
       required: false,
       default: [],
     },
     //요청 파트너
-    request_partner: {
-      type: Array,
-    },
-    //응답 파트너
-    response_partner: {
+    alam_partner: {
       type: Array,
     },
     //파트너 정보
-    partner_info: {
+    partner_id: {
       type: Array,
       required: false,
       default: [],
     },
     //프로필 이미지
-    partner_image: {
+    profile_image: {
       type: String,
       required: false,
     },
-    //내 댓글
-    my_comment: {
-      type: Object,
-    },
     //내 질문
-    my_question: {
-      type: Object,
-    },
-    //시뮬레이션 상태
-    simulation: {
-      type: Object,
-      required: false,
-      default: {},
+    my_board_question: {
+      type: Array,
+      default: null,
     },
     //내 답변
-    my_answer: {
-      type: Object,
+    my_board_answer: {
+      type: Array,
+      default: null,
     },
     //나의 채택된 답변 개수
-    selected_answer: {
+    select_board_answer: {
       type: Number,
       required: false,
-      default: 0,
+      default: null,
+    },
+    //나의 채택된 답변 개수
+    selected_board_answer: {
+      type: Number,
+      required: false,
+      default: null,
     },
   },
   {
