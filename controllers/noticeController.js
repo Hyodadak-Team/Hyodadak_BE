@@ -5,7 +5,6 @@ const Notice = require('../models/notice');
 
 const noticeList = [
     {
-        idx: 1,
         category: 'notification',
         title: 'Chrome 91 업데이트에 따른 로그인 오류 안내',
         createTime: Date.now(),
@@ -41,7 +40,6 @@ const noticeList = [
     감사합니다.​`,
     },
     {
-        idx: 2,
         category: 'event',
         title: '효다닥 X 오더퀸 결합 서비스 신규 가입 20% 추가 할인 (~12.31)',
         createTime: Date.now(),
@@ -67,7 +65,6 @@ const noticeList = [
 (효다닥 관리자 로그인 후 ‘Admin > 파트너’ 메뉴에서 확인)`,
     },
     {
-        idx: 3,
         category: 'notification',
         title: '효다닥 서비스 접속 정상화 안내',
         createTime: Date.now(),
@@ -84,7 +81,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 4,
         category: 'event',
         title: '효다닥 사용자 무료 교육 안내ㅣ23년 9월 20일(수)',
         createTime: Date.now(),
@@ -119,7 +115,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 5,
         category: 'event',
         title: '효다닥 신규 가입자 3개월 무료 제공 혜택',
         createTime: Date.now(),
@@ -146,7 +141,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 6,
         category: 'notification',
         title: 'Chrome 91 업데이트에 따른 로그인 오류 안내',
         createTime: Date.now(),
@@ -182,7 +176,6 @@ const noticeList = [
     감사합니다.​`,
     },
     {
-        idx: 7,
         category: 'notification',
         title: '효다닥 X 오더퀸 결합 서비스 신규 가입 20% 추가 할인 (~12.31)',
         createTime: Date.now(),
@@ -208,7 +201,6 @@ const noticeList = [
     (효다닥 관리자 로그인 후 ‘Admin > 파트너’ 메뉴에서 확인)`,
     },
     {
-        idx: 8,
         category: 'notification',
         title: '효다닥 서비스 접속 정상화 안내',
         createTime: Date.now(),
@@ -260,7 +252,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 10,
         category: 'event',
         title: '효다닥 신규 가입자 3개월 무료 제공 혜택',
         createTime: Date.now(),
@@ -287,7 +278,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 11,
         category: 'notification',
         title: 'Chrome 91 업데이트에 따른 로그인 오류 안내',
         createTime: Date.now(),
@@ -323,7 +313,6 @@ const noticeList = [
     감사합니다.​`,
     },
     {
-        idx: 12,
         category: 'event',
         title: '효다닥 X 오더퀸 결합 서비스 신규 가입 20% 추가 할인 (~12.31)',
         createTime: Date.now(),
@@ -349,7 +338,6 @@ const noticeList = [
     (효다닥 관리자 로그인 후 ‘Admin > 파트너’ 메뉴에서 확인)`,
     },
     {
-        idx: 13,
         category: 'notification',
         title: '효다닥 서비스 접속 정상화 안내',
         createTime: Date.now(),
@@ -366,7 +354,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 14,
         category: 'event',
         title: '효다닥 사용자 무료 교육 안내ㅣ23년 9월 20일(수)',
         createTime: Date.now(),
@@ -401,7 +388,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 15,
         category: 'event',
         title: '효다닥 신규 가입자 3개월 무료 제공 혜택',
         createTime: Date.now(),
@@ -428,7 +414,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 16,
         category: 'notification',
         title: 'Chrome 91 업데이트에 따른 로그인 오류 안내',
         createTime: Date.now(),
@@ -464,7 +449,6 @@ const noticeList = [
     감사합니다.​`,
     },
     {
-        idx: 17,
         category: 'event',
         title: '효다닥 X 오더퀸 결합 서비스 신규 가입 20% 추가 할인 (~12.31)',
         createTime: Date.now(),
@@ -490,7 +474,6 @@ const noticeList = [
     (효다닥 관리자 로그인 후 ‘Admin > 파트너’ 메뉴에서 확인)`,
     },
     {
-        idx: 18,
         category: 'notification',
         title: '효다닥 서비스 접속 정상화 안내',
         createTime: Date.now(),
@@ -507,7 +490,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 19,
         category: 'event',
         title: '효다닥 사용자 무료 교육 안내ㅣ23년 9월 20일(수)',
         createTime: Date.now(),
@@ -542,7 +524,6 @@ const noticeList = [
 감사합니다.`,
     },
     {
-        idx: 20,
         category: 'event',
         title: '효다닥 신규 가입자 3개월 무료 제공 혜택',
         createTime: Date.now(),
@@ -602,13 +583,63 @@ const selectNoticeOne = async (req, res) => {
             _id: req.params.id
         });
         if(!noticeOne) return res.status(400).json("해당 공지 없음");
-        console.log(noticeOne);
+        // console.log(noticeOne);
         return res.status(200).json(noticeOne);
     }catch(err){
         console.log(err);
         res.status(500).json("오류 발생");
     }
 }
+
+const getPrevAndNowAndNextNotices = async (req, res) => {
+    try {
+        const index = req.params.index
+        if(index  <  2){
+            const three = await Notice.find({}).skip(req.params.index-1).limit(2);
+            if(!three) return res.status(400).json("해당 공지 없음");
+            const noticeList = [null, ...three]
+            return res.status(200).json(noticeList);
+        }else{
+            const three = await Notice.find({}).skip(req.params.index-2).limit(3);
+            if(!three) return res.status(400).json("해당 공지 없음");
+            if(three.length === 2){
+                const noticeList = [...three, null];
+                return res.status(200).json(noticeList);
+            }
+            return res.status(200).json(three);
+        }
+
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+const getLatestThreeNotices = async (req, res) => {
+    try{
+        const test = await Notice.find({}).sort({"_id" : -1}).limit(3)
+        if(!test) return res.status(400).json("최신 공지 못찾음");
+        return res.status(200).json(test);
+    }catch(err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
+
+const countNotices = async (req, res) => {
+    try{
+        const count = await Notice.find({}).count();
+        if(!count) return res.status(400).json("개수 파악 불가");
+        return res.status(200).json(count);
+    }catch (err){
+        console.log(err);
+        res.status(500).json("오류 발생");
+    }
+}
 module.exports = {
-    init, getAllNotices, selectNoticeOne
+    init, getAllNotices, selectNoticeOne,
+    getPrevAndNowAndNextNotices,
+    getLatestThreeNotices,
+    countNotices
 }
