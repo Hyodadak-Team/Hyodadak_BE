@@ -141,6 +141,7 @@ const loginUser = async (req, res) => {
         message: "토큰 발행 중에 오류가 발생했습니다.",
       });
     }
+    res.cookie("token", token, { httpOnly: true });
     user.token = token;
     await user.save();
 
@@ -152,6 +153,8 @@ const loginUser = async (req, res) => {
     return res.status(500).json({ error: "something wrong" });
   }
 };
+
+const cookieJwtAuth = async (req, res, next) => {};
 
 const logoutUser = async (req, res) => {
   const { token } = req.body;
@@ -166,5 +169,6 @@ module.exports = {
   // initUser,
   testUser,
   postMyPage,
+  cookieJwtAuth,
   getMyPage,
 };
