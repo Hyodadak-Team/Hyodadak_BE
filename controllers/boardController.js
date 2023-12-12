@@ -339,7 +339,7 @@ const deleteBoardOne = async (req, res) => {
 // c
 const addAnswer = async (req, res) => {
   try {
-    const { user_id, answer_contents } = req.body;
+    const { answer_user_info, answer_contents } = req.body;
     const boardOne = await Board.findOne({
       _id: req.params.id,
     });
@@ -355,7 +355,7 @@ const addAnswer = async (req, res) => {
             ...boardOne.answers,
             {
               _id: new ObjectId(),
-              user_id,
+              answer_user_info,
               answer_contents,
               answer_create_time: new Date(Date.now()),
               comments: [],
@@ -480,20 +480,27 @@ const deleteAnswerOne = async (req, res) => {
 const addComment = async (req, res) => {
   try {
     const { board_id, answer_id } = req.params;
-    const { user_id, comment_contents } = req.body;
+    const { comment_user_info, comment_contents } = req.body;
 
     // board 찾고
     const boardOne = await Board.findOne({
       _id: board_id,
     });
-    if (!boardOne) return res.status(400).json("해당 board 없음");
+    if (!boardOne) {
+      console.log("해당 board 없음")
+      return res.status(400).json("해당 board 없음");
+    }
 
     // answer 찾고
     const answers = boardOne.answers;
     const answerIndex = answers.findIndex((answer) =>
       answer._id.equals(answer_id)
     );
-    if (!answerIndex) return res.status(400).json("해당 answer 없음");
+
+    if (answerIndex === -1){
+      console.log("해당 answer 없음")
+      return res.status(400).json("해당 answer 없음");
+    }
 
     // 해당 answer comment 추가 해주고
     answers[answerIndex] = {
@@ -502,7 +509,7 @@ const addComment = async (req, res) => {
         ...answers[answerIndex].comments,
         {
           _id: new ObjectId(),
-          user_id,
+          comment_user_info,
           comment_contents,
           comment_create_time: new Date(Date.now()),
         },
