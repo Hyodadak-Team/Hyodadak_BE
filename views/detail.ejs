@@ -19,10 +19,7 @@
             공개 : <%=board.board_access%>
         </div>
         <div>
-            카테고리 :
-            <%board.board_category.map((category) => {%>
-            <%=category%>
-            <%})%>
+            카테고리 : <%=board.board_category%>
         </div>
         <div>
             포인트 : <%=board.board_point%>
@@ -34,7 +31,21 @@
             <%})%>
         </div>
         <div>
-            작성자 : <%=board.writer_id%>
+            작성자 정보
+            <li>
+                아이디 : <%=board.writer_user_info.user_id%>
+            </li>
+            <li>
+                프로필 이미지 : <%=board.writer_user_info.pro_img%>
+            </li>
+            <li>
+                관심 카테고리 : <%board.writer_user_info.interest_category.map((category, index) => {%>
+                <%=category%>
+                <%})%>
+                (
+                <%=board.writer_user_info.interest_category.length%>
+                개)
+            </li>
         </div>
         <div>
             생성날짜 : <%=board.create_time%>
@@ -54,7 +65,21 @@
                 <hr/>
                 <h2><%=index + 1%> 번째 answer</h2>
                 <div>
-                    답변 작성자 : <%=answer.user_id%>
+                    답변 작성자 정보
+                    <li>
+                        아이디 : <%=answer.answer_user_info.user_id%>
+                    </li>
+                    <li>
+                        프로필 이미지 : <%=answer.answer_user_info.pro_img%>
+                    </li>
+                    <li>
+                        관심 카테고리 : <%answer.answer_user_info.interest_category.map((category, index) => {%>
+                        <%=category%>
+                        <%})%>
+                        (
+                        <%=answer.answer_user_info.interest_category.length%>
+                        개)
+                    </li>
                 </div>
                 <div>
                     답변 내용 : <%=answer.answer_contents%>
@@ -71,9 +96,21 @@
                     <%answer.comments.map((comment, index) => { %>
                         <div>
                             <h3><%=index + 1%> 번째 댓글</h3>
-                            <div>
-                                댓글 작성자 : <%=comment.user_id%>
-                            </div>
+                            댓글 작성자 정보
+                            <li>
+                                아이디 : <%=comment.comment_user_info.user_id%>
+                            </li>
+                            <li>
+                                프로필 이미지 : <%=comment.comment_user_info.pro_img%>
+                            </li>
+                            <li>
+                                관심 카테고리 : <%comment.comment_user_info.interest_category.map((category, index) => {%>
+                                <%=category%>
+                                <%})%>
+                                (
+                                <%=comment.comment_user_info.interest_category.length%>
+                                개)
+                            </li>
                             <div>
                                 댓글 내용 : <%=comment.comment_contents%>
                             </div>
@@ -134,7 +171,11 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({
-                user_id,
+                answer_user_info :{
+                    user_id,
+                    pro_img:"m1",
+                    interest_category:["무인자판기", "이동수단", "기타"]
+                },
                 answer_contents,
             }),
         });
@@ -189,7 +230,11 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({
-                user_id,
+                comment_user_info : {
+                    user_id,
+                    pro_img:"w1",
+                    interest_category:["무인자판기", "이동수단", "기타"]
+                },
                 comment_contents,
             }),
         });
