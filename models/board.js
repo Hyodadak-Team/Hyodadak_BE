@@ -13,7 +13,7 @@ const boardSchema = new Schema(
             required: true,
         },
         board_category: {
-            type: Array,
+            type: String,
             required: true,
         },
         board_access: {
@@ -29,8 +29,8 @@ const boardSchema = new Schema(
             required: true,
             default:[],
         },
-        writer_id: {
-            type: String,
+        writer_user_info: {
+            type: Object,
             required: true,
         },
         create_time: {
