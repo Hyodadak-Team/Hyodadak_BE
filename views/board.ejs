@@ -27,10 +27,7 @@
                     공개 : <%=board.board_access%>
                 </div>
                 <div>
-                    카테고리 :
-                    <%board.board_category.map((category) => {%>
-                        <%=category%>
-                    <%})%>
+                    카테고리 : <%=board.board_category%>
                 </div>
                 <div>
                     포인트 : <%=board.board_point%>
@@ -40,9 +37,26 @@
                     <%board.board_img.map((img) => {%>
                         <%=img%>
                     <%})%>
+                    (
+                    <%=board.board_img.length%>
+                    개)
                 </div>
                 <div>
-                    작성자 : <%=board.writer_id%>
+                    작성자 정보
+                    <li>
+                        아이디 : <%=board.writer_user_info.user_id%>
+                    </li>
+                    <li>
+                        프로필 이미지 : <%=board.writer_user_info.pro_img%>
+                    </li>
+                    <li>
+                        관심 카테고리 : <%board.writer_user_info.interest_category.map((category, index) => {%>
+                            <%=category%>
+                        <%})%>
+                        (
+                        <%=board.writer_user_info.interest_category.length%>
+                        개)
+                    </li>
                 </div>
                 <div>
                     생성날짜 : <%=board.create_time%>
@@ -96,8 +110,17 @@
             <input class="point" type="number" placeholder="숫자만가능">
         </div>
         <div>
-            작성자
-            <input class="user_id" type="text" placeholder="작성자 아이디">
+            작성자 정보 입력 <!-- 이부분은 유저 정보 받아와서 넣으면 됨 -->
+            <li>
+                <input class="user_id" type="text" placeholder="작성자 아이디">
+            </li>
+            <li>
+                <input class="pro_img" type="text" placeholder="작성자 이미지">
+            </li>
+            <li>
+                <input class="interest_category" type="text" placeholder="작성자 관심영역">
+            </li>
+
         </div>
         <button onclick=createBoard()>board 생성</button>
 
@@ -168,7 +191,9 @@
         const board_category = document.querySelector(".category").value;
         const board_access = Array.from(document.querySelectorAll(".access")).find(radio => radio.checked).value;
         const board_point = document.querySelector(".point").value;
-        const writer_id = document.querySelector(".user_id").value;
+        const user_id = document.querySelector(".user_id").value;
+        const pro_img = document.querySelector(".pro_img").value;
+        const interest_category = document.querySelector(".interest_category").value;
         const res = await fetch(`/board/create-board`, {
             method: 'post',
             headers: {
@@ -180,7 +205,11 @@
                 board_category,
                 board_access,
                 board_point,
-                writer_id,
+                writer_user_info:{
+                    user_id,
+                    pro_img,
+                    interest_category:[interest_category, interest_category]
+                },
             }),
         });
         if(res.status===200){
