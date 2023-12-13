@@ -4,7 +4,7 @@ const {
   // joinPersonal,
   // initUser,
   testUser,
-} = require("../controllers/userConnect");
+} = require("../controllers/userController");
 const router = express.Router();
 
 // router.post("/init", initUser);
