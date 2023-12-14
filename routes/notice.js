@@ -1,5 +1,5 @@
 const express = require("express");
-
+const { ObjectId } = require('mongodb');
 const {
   init,
   getAllNotices,
@@ -23,7 +23,7 @@ const router = express.Router();
  *  /notice/init:
  *    post:
  *      summary: "notice 초기 데이터 저장"
- *      description: "프로젝트 내 constants/noticeList의 데이터 저장"
+ *      description: "프로젝트 내 constants/noticeList의 실험용 데이터 저장"
  *      tags: [Notice]
  *      responses:
  *        "200":
@@ -46,6 +46,32 @@ router.post("/init", init);
  *      responses:
  *        "200":
  *          description: 전체 데이터 조회 성공
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  ok:
+ *                    type: boolean
+ *                  notices:
+ *                    type: object
+ *                    example:
+ *                      [
+ *                        {
+ *                         "_id" : 1,
+ *                         "title" : "제목 1",
+ *                         "contents" : "내용 1",
+ *                         "category" : "분류 1",
+ *                         "create_time" : "작성 시간"
+ *                        },
+ *                        {
+ *                         "_id" : 2,
+ *                         "title" : "제목 2",
+ *                         "contents" : "내용 2",
+ *                         "category" : "분류 2",
+ *                         "create_time" : "작성 시간"
+ *                        }
+ *                      ]
  *        "400":
  *          description: 전체 데이터 조회 실패
  *        "500":
@@ -56,18 +82,18 @@ router.get("/notices", getAllNotices);
 /**
  * @swagger
  * paths:
- *  /notice/{id}:
+ *  /notice/notice/{id}:
  *    get:
  *      summary: "선택된 notice 데이터 조회"
  *      description: "req.params id로 1개 데이터 조회 "
  *      tags: [Notice]
  *      parameters:
  *        - in: path
- *          name: _id
+ *          name: id
  *          required: true
  *          description: notice ObjectId
  *          schema:
- *            type: ObjectId
+ *            type: string
  *      responses:
  *        "200":
  *          description: 데이터 조회 성공
@@ -76,12 +102,12 @@ router.get("/notices", getAllNotices);
  *        "500":
  *          description: 서버 내부 오류
  */
-router.get("/:id", selectNoticeOne);
+router.get("/notice/:id", selectNoticeOne);
 
 /**
  * @swagger
  * paths:
- *  /notice/notices/{index}:
+ *  /notice/prev-now-next/{index}:
  *    get:
  *      summary: "선택된 notice 데이터 조회(이전, 현재, 다음)"
  *      description: "req.params index로 3개 데이터 조회 "
@@ -92,7 +118,7 @@ router.get("/:id", selectNoticeOne);
  *          required: true
  *          description: notice index
  *          schema:
- *            type: Number
+ *            type: number
  *      responses:
  *        "200":
  *          description: 데이터 조회 성공
@@ -101,7 +127,7 @@ router.get("/:id", selectNoticeOne);
  *        "500":
  *          description: 서버 내부 오류
  */
-router.get('/notices/:index', getPrevAndNowAndNextNotices);
+router.get('/prev-now-next/:index', getPrevAndNowAndNextNotices);
 
 /**
  * @swagger

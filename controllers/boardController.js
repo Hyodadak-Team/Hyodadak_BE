@@ -63,7 +63,7 @@ const createBoard = async (req, res) => {
 const selectBoardOne = async (req, res) => {
   try {
     const boardOne = await Board.findOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (!boardOne) return res.status(400).json("해당 공지 없음");
     // return res.render('detail', {board : boardOne}); // test
@@ -94,12 +94,12 @@ const selectBoardOneToModify = async (req, res) => {
 const increaseViews = async (req, res) => {
   try {
     const boardOne = await Board.findOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (!boardOne) return res.status(400).json("해당 board 찾기 실패");
     const modifyBoard = await Board.updateOne(
       {
-        _id: req.params.id,
+        _id: req.params.board_id,
       },
       {
         $set: {
@@ -108,7 +108,7 @@ const increaseViews = async (req, res) => {
       }
     );
     if (modifyBoard.modifiedCount !== 1) {
-      return res.status(400).json("board 수정 실패");
+      return res.status(400).json("조회수 올리기 실패");
     }
     return res.status(200).json("조회수 올리기 성공");
   } catch (err) {
@@ -128,7 +128,7 @@ const modifyBoardOne = async (req, res) => {
     } = req.body;
     const modifyBoard = await Board.updateOne(
       {
-        _id: req.params.id,
+        _id: req.params.board_id,
       },
       {
         $set: {
@@ -153,10 +153,10 @@ const modifyBoardOne = async (req, res) => {
 const deleteBoardOne = async (req, res) => {
   try {
     const deleteBoard = await Board.deleteOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (deleteBoard.deletedCount !== 1)
-      return res.status(200).json("board 지우기 실패");
+      return res.status(400).json("board 지우기 실패");
     return res.status(200).json("board 지우기 성공");
   } catch (err) {
     console.log(err);
@@ -170,13 +170,13 @@ const addAnswer = async (req, res) => {
   try {
     const { answer_user_info, answer_contents } = req.body;
     const boardOne = await Board.findOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (!boardOne) return res.status(400).json("answer 추가 실패");
 
     const modifyBoard = await Board.updateOne(
       {
-        _id: req.params.id,
+        _id: req.params.board_id,
       },
       {
         $set: {
@@ -294,7 +294,6 @@ const deleteAnswerOne = async (req, res) => {
         },
       }
     );
-    console.log(modifyBoard);
     if (modifyBoard.modifiedCount < 1)
       return res.status(400).json("answer 삭제 실패");
     return res.status(200).json("answer 삭제 완료");
@@ -398,7 +397,7 @@ const selectCommentOne = async (req, res) => {
 const modifyCommentOne = async (req, res) => {
   try {
     const { board_id, answer_id, comment_id } = req.params;
-    const { comment_content } = req.body;
+    const { comment_contents } = req.body;
     // board 찾고
     const boardOne = await Board.findOne({
       _id: board_id,
@@ -424,7 +423,7 @@ const modifyCommentOne = async (req, res) => {
     // comment 수정해주고
     comments[commentIndex] = {
       ...comments[commentIndex],
-      comment_content,
+      comment_contents,
     };
 
     // answer에 반영해주고

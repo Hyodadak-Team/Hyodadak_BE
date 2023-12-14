@@ -42,6 +42,7 @@ const selectNoticeOne = async (req, res) => {
     }
 }
 
+// 수정 필요 -> index < 0 // index length 보다 초과시 발생상황 이슈 있음
 const getPrevAndNowAndNextNotices = async (req, res) => {
     try {
         const index = req.params.index
