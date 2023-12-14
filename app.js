@@ -25,6 +25,7 @@ const noticeRouter = require("./routes/notice");
 const registerRouter = require("./routes/join");
 const boardRouter = require("./routes/board");
 const loginRouter = require("./routes/login");
+const myPageRoute = require("./routes/mypage");
 
 // Connect Router
 app.use("/test", testRouter);
@@ -32,6 +33,7 @@ app.use("/notice", noticeRouter);
 app.use("/board", boardRouter);
 app.use("/login", loginRouter);
 app.use("/join", registerRouter);
+app.use("/user", myPageRoute);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 // PORT
