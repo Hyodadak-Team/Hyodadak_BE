@@ -194,16 +194,14 @@ const getMyPage = async (req, res) => {
 
 //로그인 미들웨어
 const loginUser = async (req, res) => {
-  const { data } = req.body;
-  const id = data.user_id;
-  const pw = data.user_pw;
+  const { id, pw } = req.body;
 
   //알림 기능을 위한 전역변수 변경
   userID = id;
   isNormalUserLogined = true;
   try {
     // body에 담아서 보내준 data의 id를 db에서 확인
-    const user = await User.findOne({ id });
+    const user = await User.findOne({ user_id: id });
     if (!user) {
       return res.status(403).json({
         loginSuccess: false,
@@ -219,6 +217,7 @@ const loginUser = async (req, res) => {
         message: "비밀번호가 틀렸습니다.",
       });
     }
+    console.log(pw, user.user_pw);
 
     const token = jwt.sign({ type: "jwt", id: user.user_id }, ACCESS_SECRET, {
       expiresIn: "7d",

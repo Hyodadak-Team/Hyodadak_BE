@@ -93,7 +93,7 @@ const userSchema = new Schema(
     },
   },
   {
-    collation: "users",
+    collation: { locale: "en", strength: 2 },
     versionKey: false,
   }
 );
