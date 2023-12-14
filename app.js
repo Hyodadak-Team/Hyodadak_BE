@@ -7,6 +7,7 @@ require("dotenv").config();
 const app = express();
 
 const { PORT } = process.env;
+const {specs, swaggerUi} = require('./config/swagger');
 
 // app.set('views', './views')
 app.set("view engine", "ejs");
@@ -28,6 +29,8 @@ app.use("/notice", noticeRouter);
 app.use("/board", boardRouter);
 
 app.use("/join", registerRouter);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs))
 // PORT
 app.listen(PORT, () => {
   console.log(`${PORT} 실행 중`);

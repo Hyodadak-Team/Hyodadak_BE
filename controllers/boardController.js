@@ -1,178 +1,7 @@
 require("./mongoConnect");
-
 const { ObjectId } = require("mongodb");
 const Board = require("../models/board");
-
-const boardList = [
-  {
-    board_title: "1KTX 시간 바꾸고 싶어요",
-    board_contents:
-      "1KTX 타고 가려고 하는데 시간을 잘못 예약했어요.. 시간이 얼마 안남았는데 바꾸고 싶어요 가능할까요? 오프라인으로 얘기할 수 있는 곳이 문을 닫아서 온라인으로 직접 해야할 것 같은데 어떻게 해야할지 모르겠네요.. 기차표 취소하고 하려면 바로 자리 매진날 것 같아서 겁나서 시도를 못하겠어요ㅠㅠ 제발 도움 좀 주세요1",
-    board_category: "이동수단",
-    board_access: "public",
-    board_point: 100,
-    board_img: ["test11.png", "test12.png"],
-    writer_user_info: {
-      user_id: "qkrtjdwo5662",
-      pro_img: "m1",
-      interest_category : ["무인자판기", "이동수단", "기타"],
-    },
-    create_time: Date.now(),
-    status: "wait",
-    answers: [
-      {
-        _id: new ObjectId(),
-        answer_user_info :{
-          user_id: "psjj03",
-          pro_img: "m1",
-          interest_category : ["무인자판기", "이동수단", "기타"],
-        },
-        answer_contents: "고민을 좀 하고 물어보세요",
-        answer_create_time: new Date(Date.now()),
-        comments: [
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "aaaaa",
-              pro_img: "m2",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "말이 좀 그렇네요 사과하세요",
-            comment_create_time: new Date(Date.now()),
-          },
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "psjj03",
-              pro_img: "m1",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "말을 험하게 했네요 사과합니다.",
-            comment_create_time: new Date(Date.now()),
-          },
-        ],
-      },
-      {
-        _id: new ObjectId(),
-        answer_user_info :{
-          user_id: "bbbbb",
-          pro_img: "w1",
-          interest_category : ["무인자판기", "이동수단", "기타"],
-        },
-        answer_contents: "역을 가보세요",
-        answer_create_time: new Date(Date.now()),
-        comments: [
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "ccccc",
-              pro_img: "w2",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "오 굳",
-            comment_create_time: new Date(Date.now()),
-          },
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "qkrtjdwo5662",
-              pro_img: "m1",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "감사합니다 채택할게요",
-            comment_create_time: new Date(Date.now()),
-          },
-        ],
-      },
-    ],
-    selected_answer: [],
-    views: 0,
-  },
-  {
-    board_title: "KTX 어디서탐?",
-    board_contents:
-        "KTX를 어디서 타는지 모르겠어요. 어디서 타는지좀 제발좀 알려주세요 제발좀 제발좀 제발좀 제발좀",
-    board_category: "이동수단",
-    board_access: "public",
-    board_point: 100,
-    board_img: ["test11.png", "test12.png"],
-    writer_user_info: {
-      user_id: "tjdwo1234",
-      pro_img: "m1",
-      interest_category : ["무인자판기", "이동수단", "기타"],
-    },
-    create_time: Date.now(),
-    status: "wait",
-    answers: [
-      {
-        _id: new ObjectId(),
-        answer_user_info :{
-          user_id: "psjj03",
-          pro_img: "m1",
-          interest_category : ["무인자판기", "이동수단", "기타"],
-        },
-        answer_contents: "고민을 좀 하고 물어보세요",
-        answer_create_time: new Date(Date.now()),
-        comments: [
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "aaaaa",
-              pro_img: "m2",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "말이 좀 그렇네요 사과하세요",
-            comment_create_time: new Date(Date.now()),
-          },
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "psjj03",
-              pro_img: "m1",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "말을 험하게 했네요 사과합니다.",
-            comment_create_time: new Date(Date.now()),
-          },
-        ],
-      },
-      {
-        _id: new ObjectId(),
-        answer_user_info :{
-          user_id: "bbbbb",
-          pro_img: "w1",
-          interest_category : ["무인자판기", "이동수단", "기타"],
-        },
-        answer_contents: "역을 가보세요",
-        answer_create_time: new Date(Date.now()),
-        comments: [
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "ccccc",
-              pro_img: "w2",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "오 굳",
-            comment_create_time: new Date(Date.now()),
-          },
-          {
-            _id: new ObjectId(),
-            comment_user_info :{
-              user_id: "qkrtjdwo5662",
-              pro_img: "m1",
-              interest_category : ["무인자판기", "이동수단", "기타"],
-            },
-            comment_contents: "감사합니다 채택할게요",
-            comment_create_time: new Date(Date.now()),
-          },
-        ],
-      },
-    ],
-    selected_answer: [],
-    views: 0,
-  },
-];
+const boardList = require("../constants/boardList")
 
 const init = async (req, res) => {
   try {
@@ -234,7 +63,7 @@ const createBoard = async (req, res) => {
 const selectBoardOne = async (req, res) => {
   try {
     const boardOne = await Board.findOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (!boardOne) return res.status(400).json("해당 공지 없음");
     // return res.render('detail', {board : boardOne}); // test
@@ -265,12 +94,12 @@ const selectBoardOneToModify = async (req, res) => {
 const increaseViews = async (req, res) => {
   try {
     const boardOne = await Board.findOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (!boardOne) return res.status(400).json("해당 board 찾기 실패");
     const modifyBoard = await Board.updateOne(
       {
-        _id: req.params.id,
+        _id: req.params.board_id,
       },
       {
         $set: {
@@ -279,7 +108,7 @@ const increaseViews = async (req, res) => {
       }
     );
     if (modifyBoard.modifiedCount !== 1) {
-      return res.status(400).json("board 수정 실패");
+      return res.status(400).json("조회수 올리기 실패");
     }
     return res.status(200).json("조회수 올리기 성공");
   } catch (err) {
@@ -299,7 +128,7 @@ const modifyBoardOne = async (req, res) => {
     } = req.body;
     const modifyBoard = await Board.updateOne(
       {
-        _id: req.params.id,
+        _id: req.params.board_id,
       },
       {
         $set: {
@@ -324,10 +153,10 @@ const modifyBoardOne = async (req, res) => {
 const deleteBoardOne = async (req, res) => {
   try {
     const deleteBoard = await Board.deleteOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (deleteBoard.deletedCount !== 1)
-      return res.status(200).json("board 지우기 실패");
+      return res.status(400).json("board 지우기 실패");
     return res.status(200).json("board 지우기 성공");
   } catch (err) {
     console.log(err);
@@ -341,13 +170,13 @@ const addAnswer = async (req, res) => {
   try {
     const { answer_user_info, answer_contents } = req.body;
     const boardOne = await Board.findOne({
-      _id: req.params.id,
+      _id: req.params.board_id,
     });
     if (!boardOne) return res.status(400).json("answer 추가 실패");
 
     const modifyBoard = await Board.updateOne(
       {
-        _id: req.params.id,
+        _id: req.params.board_id,
       },
       {
         $set: {
@@ -465,7 +294,6 @@ const deleteAnswerOne = async (req, res) => {
         },
       }
     );
-    console.log(modifyBoard);
     if (modifyBoard.modifiedCount < 1)
       return res.status(400).json("answer 삭제 실패");
     return res.status(200).json("answer 삭제 완료");
@@ -569,7 +397,7 @@ const selectCommentOne = async (req, res) => {
 const modifyCommentOne = async (req, res) => {
   try {
     const { board_id, answer_id, comment_id } = req.params;
-    const { comment_content } = req.body;
+    const { comment_contents } = req.body;
     // board 찾고
     const boardOne = await Board.findOne({
       _id: board_id,
@@ -595,7 +423,7 @@ const modifyCommentOne = async (req, res) => {
     // comment 수정해주고
     comments[commentIndex] = {
       ...comments[commentIndex],
-      comment_content,
+      comment_contents,
     };
 
     // answer에 반영해주고

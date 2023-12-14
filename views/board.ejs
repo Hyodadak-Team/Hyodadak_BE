@@ -146,7 +146,7 @@
     }
 
     const selectOne = async (id) => {
-        const res = await fetch(`/board/increase-views/${id}`, {
+        const res = await fetch(`/board/board/increase/${id}`, {
             method: 'put',
             headers: {
                 'Content-type': 'application/json'
@@ -155,7 +155,7 @@
         });
 
         if(res.status === 200){
-            location.href=`/board/detail/${id}`;
+            location.href=`/board/board/${id}`;
         }else{
             alert("오류");
         }
@@ -169,7 +169,7 @@
 
     const deleteOne = async (id) => {
         if(confirm("삭제?")){
-            const res = await fetch(`/board/delete/${id}`, {
+            const res = await fetch(`/board/board/delete/${id}`, {
                 method: 'delete',
                 headers: {
                     'Content-type': 'application/json'
@@ -194,7 +194,7 @@
         const user_id = document.querySelector(".user_id").value;
         const pro_img = document.querySelector(".pro_img").value;
         const interest_category = document.querySelector(".interest_category").value;
-        const res = await fetch(`/board/create-board`, {
+        const res = await fetch(`/board/board/add`, {
             method: 'post',
             headers: {
                 'Content-type': 'application/json'
