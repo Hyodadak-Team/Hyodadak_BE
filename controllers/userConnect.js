@@ -103,7 +103,13 @@ const joinUserFindID = async (req, res) => {
 //localhost:4000/user -> post방식으로
 const postMyPage = async (req, res) => {
   try {
-  } catch {}
+    const MyPageUser = await User.findOne({ user_id: decoded.user_id });
+
+    if (MyPageUser) {
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 //localhost:4000/user -> get방식으로
@@ -182,7 +188,6 @@ const loginUser = async (req, res) => {
         message: "토큰 발행 중에 오류가 발생했습니다.",
       });
     }
-    res.cookie("token", token, { httpOnly: true });
     user.token = token;
     await user.save();
 
