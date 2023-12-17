@@ -4,71 +4,13 @@ const { ObjectId } = require("mongodb");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const userList = require("../constants/userList")
 //유저 로그인시 데이터를 받기 위한 전역변수
 let isNormalUserLogined = false;
 let userID;
 
-const saltRounds = 10;
+const saltRounds = 10; // salt 가미 값, 전역관리
 const { ACCESS_SECRET } = process.env;
-
-// const userList = [
-//   {
-//     user_id: "dbswp",
-//     user_pw: "1234",
-//     user_tel: "01012345678",
-//     user_name: "윤제",
-//     user_type: "responser",
-//     intro: "안녕하세요 아는게 많은 송수빈입니다.",
-//     level: 2,
-//     poiint: 1000,
-//     interest_category: ["무인자판기", "이동수단", "기타"],
-//     alam_partner: [
-//       {
-//         user_id: "qkrtjdwo5662",
-//         create_time: "date",
-//         contents: "받아주세요",
-//         is_partner: "pendding",
-//       },
-//     ],
-//     partner_id: ["dbswp", "dmswl"],
-//     partner_image: "m1", // m1,m2 이런식
-//     my_board_question: null,
-//     my_board_answer: [
-//       {
-//         board_Object_Id: "3231323dsad", // 어떤 게시물
-//         answer_Object_Id: "3231323dsad", // 어떤 답변
-//       },
-//     ],
-//     select_board_answer: null,
-//     selected_board_answer: 4,
-//   },
-//   {
-//     user_id: "wldnjspark",
-//     user_pw: "1234",
-//     user_tel: "01012345678",
-//     user_name: "박지원",
-//     user_type: "questioner",
-//     intro: "안녕하세요 아는게 많은 송수빈입니다.",
-//     level: null,
-//     poiint: 1000,
-//     interser_category: ["무인자판기", "이동수단", "기타"],
-//     alam_partner: [
-//       {
-//         user_id: "qkrtjdwo5662",
-//         create_time: "date",
-//         contents: "받아주세요",
-//         is_partner: "pendding",
-//       },
-//     ],
-//     partner_info: ["dbswp", "dmswl"],
-//     partner_image: "m1", // m1,m2 이런식
-//     my_board_question: ["ObjectId"],
-//     my_board_answer: null,
-//     select_board_answer: 2,
-//     selected_board_answer: null,
-//   },
-// ];
 
 const testUser = async (req, res) => {
   try {
@@ -109,7 +51,10 @@ const postMyPage = async (req, res) => {
 //localhost:4000/user -> get방식으로
 const getMyPage = async (req, res) => {
   try {
-    const MyPageUser = await User.findOne({ user_id: decoded.user_id });
+    const token = req.body.token
+    console.log(token)
+    const decoded = jwt.verify(token, ACCESS_SECRET);
+    const MyPageUser = await User.findOne({ _id: decoded.user._id });
 
     if (MyPageUser) {
       // 필요한 정보 추출
@@ -145,7 +90,6 @@ const getMyPage = async (req, res) => {
 //로그인 미들웨어
 const loginUser = async (req, res) => {
   const { id, pw } = req.body;
-
   //알림 기능을 위한 전역변수 변경
   userID = id;
   isNormalUserLogined = true;
@@ -161,34 +105,35 @@ const loginUser = async (req, res) => {
 
     // 해싱 암호화한 비밀번호 대조
     const isMatch = await bcrypt.compare(pw, user.user_pw);
+    console.log(isMatch)
     if (!isMatch) {
       return res.status(403).json({
         loginSuccess: false,
         message: "비밀번호가 틀렸습니다.",
       });
     }
-    console.log(pw, user.user_pw);
 
     const token = jwt.sign(
-      { type: "jwt", name: user.user_name },
+      { type: "jwt", user: {_id : user._id} },
       ACCESS_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "5m",
       }
     );
+    console.log(token)
     if (!token) {
       return res.status(500).json({
         loginSuccess: false,
         message: "토큰 발행 중에 오류가 발생했습니다.",
       });
     }
-    res.cookie("token", token, { httpOnly: true });
-    user.token = token;
-    await user.save();
 
+    user.token = token;
+
+    console.log(token)
     return res
       .status(200)
-      .json({ loginSuccess: true, name: user.user_name, token: token });
+      .json({ token});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "something wrong" });
@@ -216,6 +161,26 @@ const cookieJwtAuth = async (req, res, next) => {
   }
 };
 
+const authJwt = async (req, res, next) => {
+  try {
+    const token = req.body.token
+    console.log(token)
+    const decoded = jwt.verify(token, ACCESS_SECRET);
+    if(!decoded) return res.status(400).json("XX");
+    console.log(decoded.user._id)
+    const checkUser = await User.findOne({ _id: decoded.user._id });
+    if (checkUser) {
+      res.status(200).json("토큰 유효 인증 성공") ;
+      next();
+    } else {
+      res.status(401).json({ message: "인증되지 않은 사용자입니다." });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json("토큰 유효하지 않음");
+  }
+};
+
 const logoutUser = async (req, res) => {
   const { token } = req.body;
   res.json({ message: "로그아웃 성공" });
@@ -232,4 +197,5 @@ module.exports = {
   postMyPage,
   cookieJwtAuth,
   getMyPage,
+  authJwt
 };

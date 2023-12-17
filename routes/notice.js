@@ -3,10 +3,12 @@ const { ObjectId } = require('mongodb');
 const {
   init,
   getAllNotices,
+  getAllNoticesDesc,
   selectNoticeOne,
   getPrevAndNowAndNextNotices,
   getLatestThreeNotices,
   countNotices,
+  pagiNation
 } = require("../controllers/noticeController");
 const router = express.Router();
 
@@ -77,7 +79,7 @@ router.post("/init", init);
  *        "500":
  *          description: 서버 내부 오류
  */
-router.get("/notices", getAllNotices);
+router.get("/notices", getAllNoticesDesc);
 
 /**
  * @swagger
@@ -155,6 +157,7 @@ router.get("/latest-notice", getLatestThreeNotices);
  *      summary: "notice 데이터 개수 조회"
  *      description: ""
  *      tags: [Notice]
+ *
  *      responses:
  *        "200":
  *          description: 데이터 개수 조회 성공
@@ -165,4 +168,28 @@ router.get("/latest-notice", getLatestThreeNotices);
  */
 router.get('/notices-count', countNotices);
 
+/**
+ * @swagger
+ * paths:
+ *  /notice/pagination/{page}:
+ *    get:
+ *      summary: "notice 데이터 개수 조회"
+ *      description: ""
+ *      tags: [Notice]
+ *      parameters:
+ *        - in: path
+ *          name: page
+ *          required: true
+ *          description: page index
+ *          schema:
+ *            type: string
+ *      responses:
+ *        "200":
+ *          description: 데이터 개수 조회 성공
+ *        "400":
+ *          description: 데이터 개수 조회 실패
+ *        "500":
+ *          description: 서버 내부 오류
+ */
+router.get('/pagination/:page', pagiNation)
 module.exports = router;
