@@ -4,7 +4,7 @@ const { ObjectId } = require("mongodb");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const userList = require("../constants/userList")
+const userList = require("../constants/userList");
 //유저 로그인시 데이터를 받기 위한 전역변수
 let isNormalUserLogined = false;
 let userID;
@@ -42,17 +42,50 @@ const joinUserFindID = async (req, res) => {
   }
 };
 
-//localhost:4000/user -> post방식으로
+//localhost:4000/user/postUser -> post방식으로
 const postMyPage = async (req, res) => {
   try {
-  } catch {}
+    const { userData } = req.body;
+    const token = req.body.token;
+    const decoded = jwt.verify(token, ACCESS_SECRET);
+    console.log(userData);
+
+    const MyPageUser = await User.findOne({ user_name: decoded.user_name });
+    if (MyPageUser) {
+      const user = await User({
+        profile_image: userData.profileImg,
+        point: userData.money,
+        selected_board_answer: userData.questionNum,
+        level: userData.level,
+        interest_category: userData.major,
+        intro: userData.intro,
+      });
+      await user.save();
+      res.status(200).json({
+        user: {
+          profile_image: user.profile_image,
+          point: user.point,
+          selected_board_answer: user.selected_board_answer,
+          level: user.level,
+          interest_category: user.interest_category,
+          intro: user.intro,
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Error saving user data",
+    });
+  }
 };
 
 //localhost:4000/user -> get방식으로
 const getMyPage = async (req, res) => {
   try {
-    const token = req.body.token
-    console.log(token)
+    const token = req.body.token;
+    console.log(token);
     const decoded = jwt.verify(token, ACCESS_SECRET);
     const MyPageUser = await User.findOne({ _id: decoded.user._id });
 
@@ -105,7 +138,7 @@ const loginUser = async (req, res) => {
 
     // 해싱 암호화한 비밀번호 대조
     const isMatch = await bcrypt.compare(pw, user.user_pw);
-    console.log(isMatch)
+    console.log(isMatch);
     if (!isMatch) {
       return res.status(403).json({
         loginSuccess: false,
@@ -114,13 +147,13 @@ const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { type: "jwt", user: {_id : user._id} },
+      { type: "jwt", user: { _id: user._id } },
       ACCESS_SECRET,
       {
         expiresIn: "5m",
       }
     );
-    console.log(token)
+    console.log(token);
     if (!token) {
       return res.status(500).json({
         loginSuccess: false,
@@ -130,10 +163,8 @@ const loginUser = async (req, res) => {
 
     user.token = token;
 
-    console.log(token)
-    return res
-      .status(200)
-      .json({ token});
+    console.log(token);
+    return res.status(200).json({ token });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "something wrong" });
@@ -163,14 +194,14 @@ const cookieJwtAuth = async (req, res, next) => {
 
 const authJwt = async (req, res, next) => {
   try {
-    const token = req.body.token
-    console.log(token)
+    const token = req.body.token;
+    console.log(token);
     const decoded = jwt.verify(token, ACCESS_SECRET);
-    if(!decoded) return res.status(400).json("XX");
-    console.log(decoded.user._id)
+    if (!decoded) return res.status(400).json("XX");
+    console.log(decoded.user._id);
     const checkUser = await User.findOne({ _id: decoded.user._id });
     if (checkUser) {
-      res.status(200).json("토큰 유효 인증 성공") ;
+      res.status(200).json("토큰 유효 인증 성공");
       next();
     } else {
       res.status(401).json({ message: "인증되지 않은 사용자입니다." });
@@ -197,5 +228,5 @@ module.exports = {
   postMyPage,
   cookieJwtAuth,
   getMyPage,
-  authJwt
+  authJwt,
 };

@@ -4,11 +4,11 @@ const {
   postMyPage,
   getMyPage,
   cookieJwtAuth,
-    authJwt
+  authJwt,
 } = require("../controllers/userController");
 const router = express.Router();
 
-router.get("/user", authJwt, getMyPage);
-router.post("/user", cookieJwtAuth, postMyPage);
+router.get("/getuser", getMyPage);
+router.post("/postuser", postMyPage);
 
 module.exports = router;
