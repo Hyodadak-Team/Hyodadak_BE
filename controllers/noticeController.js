@@ -2,7 +2,7 @@ require('./mongoConnect');
 const { ObjectId } = require('mongodb');
 const Notice = require('../models/notice');
 const noticeList = require('../constants/noticeList');
-
+const category = ["", "notification", "event"]
 
 const init = async(req, res) => {
     try{
@@ -83,7 +83,7 @@ const getPrevAndNowAndNextNotices = async (req, res) => {
 
 const getLatestThreeNotices = async (req, res) => {
     try{
-        const test = await Notice.find({}).sort({"_id" : -1}).limit(3)
+        const test = await Notice.find({}).sort({"_id" : -1}).limit(3);
         if(!test) return res.status(400).json("최신 공지 못찾음");
         return res.status(200).json(test);
     }catch(err){
@@ -92,47 +92,95 @@ const getLatestThreeNotices = async (req, res) => {
     }
 }
 
-const countNotices = async (req, res) => {
+const countNoticesByCategory = async (req, res) => {
     try{
-        const count = await Notice.find({}).count();
-        if(!count) return res.status(400).json("개수 파악 불가");
-        return res.status(200).json(count);
+        const category_number = parseInt(req.params.category_number);
+        console.log(category_number)
+
+        if(category_number === 0){
+            const count = await Notice.find({}).count();
+            if(!count) return res.status(400).json("개수 파악 불가");
+            return res.status(200).json(count);
+        }else if(category_number < category.length){
+            const count = await Notice.find({category: category[category_number]}).count();
+            if(!count) return res.status(400).json("개수 파악 불가");
+            return res.status(200).json(count);
+        }else{
+            return res.status(400).json("없어요");
+        }
+
     }catch (err){
         console.log(err);
-        res.status(500).json("오류 발생");
+        return res.status(500).json("오류 발생");
     }
 }
 
-const pagiNation = async (req, res) => {
+const getNoticesByCategory = async (req, res) => {
     try{
+        const category_number = parseInt(req.params.category_number);
+        console.log(category_number)
+
+        if(category_number === 1){
+            const notices = await Notice.find({category: "notification"});
+            return res.status(200).json(notices)
+        }else if(category_number === 2){
+            const notices = await Notice.find({category: "event"});
+            return res.status(200).json(notices)
+        }
+    }catch(err){
+        console.log(err);
+        return res.status(500).json("오류 발생");
+    }
+}
+
+const paginationByCategory = async (req, res) => {
+    try{
+        const category_number = parseInt(req.params.category_number);
+        console.log(category_number)
         const itemsPerPage = 7;
         const currentPage = parseInt(req.params.page);
 
-        const count = await Notice.find({}).count();
-        const pageLength = Math.ceil(count/itemsPerPage)
-        console.log(pageLength + " " + currentPage)
-        if(pageLength === currentPage){
-            const test = await Notice.find({}).skip(0).limit(count%itemsPerPage).sort({"_id" : -1});
-            console.log(test.length);
-            return res.status(200).json(test);
-        }else if(currentPage!== 0 && pageLength > currentPage){
-            const test = await Notice.find({}).skip(count%itemsPerPage + (pageLength-currentPage-1)*itemsPerPage).limit(itemsPerPage).sort({"_id" : -1});
-            console.log(test.length);
-            return res.status(200).json(test);
+        if(category_number === 0){
+            const count = await Notice.find({}).count();
+            const pageLength = Math.ceil(count/itemsPerPage)
+            if(pageLength === currentPage){
+                const test = await Notice.find({}).sort({"_id":-1}).skip((currentPage-1)*itemsPerPage).limit(count%itemsPerPage);
+                return res.status(200).json(test)
+            }else if(currentPage!== 0 && pageLength > currentPage){
+                const test = await Notice.find({}).sort({"_id":-1}).skip((currentPage-1)*itemsPerPage).limit(itemsPerPage);
+                return res.status(200).json(test);
+            }else{
+                return res.status(400).json("XX");
+            }
+        }else if(category_number < category.length){
+            const count = await Notice.find({category : category[category_number]}).count();
+            const pageLength = Math.ceil(count/itemsPerPage)
+            if(pageLength === currentPage){
+                const test = await Notice.find({category : category[category_number]}).sort({"_id":-1}).skip((currentPage-1)*itemsPerPage).limit(count%itemsPerPage);
+                return res.status(200).json(test)
+            }else if(currentPage!== 0 && pageLength > currentPage){
+                const test = await Notice.find({category : category[category_number]}).sort({"_id":-1}).skip((currentPage-1)*itemsPerPage).limit(itemsPerPage);
+                return res.status(200).json(test);
+            }else{
+                return res.status(400).json("XX");
+            }
         }else{
-            return res.status(400).json("XX");
+            return res.status(400).json("없어요");
         }
+
 
     }catch(err){
         console.log(err);
-        res.status(500).json("오류 발생");
+        return res.status(500).json("오류 발생");
     }
-
 }
+
+
 module.exports = {
     init, getAllNotices, getAllNoticesDesc ,selectNoticeOne,
     getPrevAndNowAndNextNotices,
     getLatestThreeNotices,
-    countNotices,
-    pagiNation
+    countNoticesByCategory,
+    paginationByCategory,
+    getNoticesByCategory
 }

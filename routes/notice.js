@@ -7,8 +7,9 @@ const {
   selectNoticeOne,
   getPrevAndNowAndNextNotices,
   getLatestThreeNotices,
-  countNotices,
-  pagiNation
+  countNoticesByCategory,
+  pagination,
+  getNoticesByCategory, paginationByCategory
 } = require("../controllers/noticeController");
 const router = express.Router();
 
@@ -166,7 +167,7 @@ router.get("/latest-notice", getLatestThreeNotices);
  *        "500":
  *          description: 서버 내부 오류
  */
-router.get('/notices-count', countNotices);
+router.get('/notices-count/:category_number', countNoticesByCategory);
 
 /**
  * @swagger
@@ -191,5 +192,7 @@ router.get('/notices-count', countNotices);
  *        "500":
  *          description: 서버 내부 오류
  */
-router.get('/pagination/:page', pagiNation)
+router.get('/pagination/:category_number/:page', paginationByCategory)
+
+router.get('/notices/category/:category_number', getNoticesByCategory)
 module.exports = router;
