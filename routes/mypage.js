@@ -1,11 +1,6 @@
 const express = require("express");
 
-const {
-  postMyPage,
-  getMyPage,
-  cookieJwtAuth,
-  authJwt,
-} = require("../controllers/userController");
+const { postMyPage, getMyPage } = require("../controllers/userController");
 const router = express.Router();
 
 router.get("/getuser", getMyPage);

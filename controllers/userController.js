@@ -4,7 +4,7 @@ const { ObjectId } = require("mongodb");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const userList = require("../constants/userList");
+// const userList = require("../constants/userList");
 //유저 로그인시 데이터를 받기 위한 전역변수
 let isNormalUserLogined = false;
 let userID;
@@ -81,7 +81,7 @@ const postMyPage = async (req, res) => {
   }
 };
 
-//localhost:4000/user -> get방식으로
+//localhost:4000/user/getuser -> get방식으로
 const getMyPage = async (req, res) => {
   try {
     const token = req.body.token;
