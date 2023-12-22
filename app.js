@@ -33,7 +33,7 @@ app.use("/notice", noticeRouter);
 app.use("/board", boardRouter);
 app.use("/login", loginRouter);
 app.use("/join", registerRouter);
-app.use("/user", myPageRoute);
+app.use("/mypage", myPageRoute);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 // PORT

@@ -4,7 +4,7 @@ const { ObjectId } = require("mongodb");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const userList = require("../constants/userList")
+// const userList = require("../constants/userList");
 //유저 로그인시 데이터를 받기 위한 전역변수
 let isNormalUserLogined = false;
 let userID;
@@ -42,48 +42,68 @@ const joinUserFindID = async (req, res) => {
   }
 };
 
-//localhost:4000/user -> post방식으로
+//localhost:4000/user/postuser -> post방식으로
 const postMyPage = async (req, res) => {
   try {
-  } catch {}
-};
-
-//localhost:4000/user -> get방식으로
-const getMyPage = async (req, res) => {
-  try {
-    const token = req.body.token
-    console.log(token)
+    const { userData, token } = req.body;
     const decoded = jwt.verify(token, ACCESS_SECRET);
-    const MyPageUser = await User.findOne({ _id: decoded.user._id });
 
+    const MyPageUser = await User.findOne({ _id: decoded.user._id });
     if (MyPageUser) {
-      // 필요한 정보 추출
-      const userId = MyPageUser.user_id;
-      const userImg = MyPageUser.profile_image;
-      //배열
-      const userIntersetCate = MyPageUser.interest_category;
-      const userLevel = MyPageUser.level;
-      const userSelectesAnswer = MyPageUser.selected_board_answer;
-      const userPoint = MyPageUser.point;
-      //배열의 길이
-      const userPartener = MyPageUser.partner_id.length;
-      const userIntro = MyPageUser.intro;
+      MyPageUser.profile_image = userData.profileImg;
+      MyPageUser.partner_id = userData.partnerId;
+      MyPageUser.point = userData.money;
+      MyPageUser.selected_board_answer = userData.questionNum;
+      MyPageUser.level = userData.level;
+      MyPageUser.interest_category = userData.major;
+      MyPageUser.intro = userData.intro;
+
+      await MyPageUser.save();
 
       res.status(200).json({
-        userId: userId,
-        userImg: userImg,
-        userIntersetCate: userIntersetCate,
-        userLevel: userLevel,
-        userSelectesAnswer: userSelectesAnswer,
-        userPoint: userPoint,
-        userPartener: userPartener,
-        userIntro: userIntro,
+        user: {
+          user_id: MyPageUser.user_id,
+          user_name: MyPageUser.user_name,
+          partner_id: MyPageUser.partner_id,
+          profile_image: MyPageUser.profile_image,
+          point: MyPageUser.point,
+          selected_board_answer: MyPageUser.selected_board_answer,
+          level: MyPageUser.level,
+          interest_category: MyPageUser.interest_category,
+          intro: MyPageUser.intro,
+        },
       });
-    } else {
-      res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Error saving user data",
+    });
+  }
+};
+
+//localhost:4000/user/getuser -> get방식으로
+const getMyPage = async (req, res) => {
+  try {
+    const authorizationHeader = req.headers.authorization;
+
+    if (!authorizationHeader) {
+      return res.status(401).json({ message: "토큰이 제공되지 않았습니다." });
+    }
+
+    const token = authorizationHeader.split(" ")[1]; // Bearer 다음의 토큰 값
+    const decoded = jwt.verify(token, ACCESS_SECRET);
+
+    // decoded에는 토큰에 저장된 정보가 들어있습니다. 이 정보를 사용하여 데이터베이스에서 사용자 정보를 조회합니다.
+    const userDataFromDB = await User.findOne(decoded.user_id);
+
+    if (userDataFromDB) {
+      res.status(200).json(userDataFromDB);
     }
   } catch (err) {
     console.log(err);
+    res.status(401).json({ message: "유효하지 않은 토큰입니다." });
   }
 };
 
@@ -105,7 +125,7 @@ const loginUser = async (req, res) => {
 
     // 해싱 암호화한 비밀번호 대조
     const isMatch = await bcrypt.compare(pw, user.user_pw);
-    console.log(isMatch)
+    console.log(isMatch);
     if (!isMatch) {
       return res.status(403).json({
         loginSuccess: false,
@@ -114,13 +134,13 @@ const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { type: "jwt", user: {_id : user._id} },
+      { type: "jwt", user: { _id: user._id } },
       ACCESS_SECRET,
       {
-        expiresIn: "5m",
+        expiresIn: "5h",
       }
     );
-    console.log(token)
+    console.log(token);
     if (!token) {
       return res.status(500).json({
         loginSuccess: false,
@@ -130,10 +150,8 @@ const loginUser = async (req, res) => {
 
     user.token = token;
 
-    console.log(token)
-    return res
-      .status(200)
-      .json({ token});
+    console.log(token);
+    return res.status(200).json({ token });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "something wrong" });
@@ -163,14 +181,14 @@ const cookieJwtAuth = async (req, res, next) => {
 
 const authJwt = async (req, res, next) => {
   try {
-    const token = req.body.token
-    console.log(token)
+    const token = req.body.token;
+    console.log(token);
     const decoded = jwt.verify(token, ACCESS_SECRET);
-    if(!decoded) return res.status(400).json("XX");
-    console.log(decoded.user._id)
+    if (!decoded) return res.status(400).json("XX");
+    console.log(decoded.user._id);
     const checkUser = await User.findOne({ _id: decoded.user._id });
     if (checkUser) {
-      res.status(200).json("토큰 유효 인증 성공") ;
+      res.status(200).json("토큰 유효 인증 성공");
       next();
     } else {
       res.status(401).json({ message: "인증되지 않은 사용자입니다." });
@@ -197,5 +215,5 @@ module.exports = {
   postMyPage,
   cookieJwtAuth,
   getMyPage,
-  authJwt
+  authJwt,
 };
