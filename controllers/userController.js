@@ -51,7 +51,7 @@ const postMyPage = async (req, res) => {
     const MyPageUser = await User.findOne({ _id: decoded.user._id });
     if (MyPageUser) {
       MyPageUser.profile_image = userData.profileImg;
-      MyPageUser.partner_id = userData.partner_id;
+      MyPageUser.partner_id = userData.partnerId;
       MyPageUser.point = userData.money;
       MyPageUser.selected_board_answer = userData.questionNum;
       MyPageUser.level = userData.level;
@@ -86,38 +86,24 @@ const postMyPage = async (req, res) => {
 //localhost:4000/user/getuser -> get방식으로
 const getMyPage = async (req, res) => {
   try {
-    const token = req.body.token;
+    const authorizationHeader = req.headers.authorization;
+
+    if (!authorizationHeader) {
+      return res.status(401).json({ message: "토큰이 제공되지 않았습니다." });
+    }
+
+    const token = authorizationHeader.split(" ")[1]; // Bearer 다음의 토큰 값
     const decoded = jwt.verify(token, ACCESS_SECRET);
-    const MyPageUser = await User.findOne({ _id: decoded.user._id });
 
-    if (MyPageUser) {
-      // 필요한 정보 추출
-      const userId = MyPageUser.user_id;
-      const userImg = MyPageUser.profile_image;
-      //배열
-      const userIntersetCate = MyPageUser.interest_category;
-      const userLevel = MyPageUser.level;
-      const userSelectesAnswer = MyPageUser.selected_board_answer;
-      const userPoint = MyPageUser.point;
-      //배열의 길이
-      const userPartener = MyPageUser.partner_id.length;
-      const userIntro = MyPageUser.intro;
+    // decoded에는 토큰에 저장된 정보가 들어있습니다. 이 정보를 사용하여 데이터베이스에서 사용자 정보를 조회합니다.
+    const userDataFromDB = await User.findOne(decoded.user_id);
 
-      res.status(200).json({
-        userId: userId,
-        userImg: userImg,
-        userIntersetCate: userIntersetCate,
-        userLevel: userLevel,
-        userSelectesAnswer: userSelectesAnswer,
-        userPoint: userPoint,
-        userPartener: userPartener,
-        userIntro: userIntro,
-      });
-    } else {
-      res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+    if (userDataFromDB) {
+      res.status(200).json(userDataFromDB);
     }
   } catch (err) {
     console.log(err);
+    res.status(401).json({ message: "유효하지 않은 토큰입니다." });
   }
 };
 
