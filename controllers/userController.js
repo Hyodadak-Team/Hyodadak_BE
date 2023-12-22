@@ -42,33 +42,35 @@ const joinUserFindID = async (req, res) => {
   }
 };
 
-//localhost:4000/user/postUser -> post방식으로
+//localhost:4000/user/postuser -> post방식으로
 const postMyPage = async (req, res) => {
   try {
-    const { userData } = req.body;
-    const token = req.body.token;
+    const { userData, token } = req.body;
     const decoded = jwt.verify(token, ACCESS_SECRET);
-    console.log(userData);
 
-    const MyPageUser = await User.findOne({ user_name: decoded.user_name });
+    const MyPageUser = await User.findOne({ _id: decoded.user._id });
     if (MyPageUser) {
-      const user = await User({
-        profile_image: userData.profileImg,
-        point: userData.money,
-        selected_board_answer: userData.questionNum,
-        level: userData.level,
-        interest_category: userData.major,
-        intro: userData.intro,
-      });
-      await user.save();
+      MyPageUser.profile_image = userData.profileImg;
+      MyPageUser.partner_id = userData.partner_id;
+      MyPageUser.point = userData.money;
+      MyPageUser.selected_board_answer = userData.questionNum;
+      MyPageUser.level = userData.level;
+      MyPageUser.interest_category = userData.major;
+      MyPageUser.intro = userData.intro;
+
+      await MyPageUser.save();
+
       res.status(200).json({
         user: {
-          profile_image: user.profile_image,
-          point: user.point,
-          selected_board_answer: user.selected_board_answer,
-          level: user.level,
-          interest_category: user.interest_category,
-          intro: user.intro,
+          user_id: MyPageUser.user_id,
+          user_name: MyPageUser.user_name,
+          partner_id: MyPageUser.partner_id,
+          profile_image: MyPageUser.profile_image,
+          point: MyPageUser.point,
+          selected_board_answer: MyPageUser.selected_board_answer,
+          level: MyPageUser.level,
+          interest_category: MyPageUser.interest_category,
+          intro: MyPageUser.intro,
         },
       });
     }
@@ -85,7 +87,6 @@ const postMyPage = async (req, res) => {
 const getMyPage = async (req, res) => {
   try {
     const token = req.body.token;
-    console.log(token);
     const decoded = jwt.verify(token, ACCESS_SECRET);
     const MyPageUser = await User.findOne({ _id: decoded.user._id });
 
@@ -150,7 +151,7 @@ const loginUser = async (req, res) => {
       { type: "jwt", user: { _id: user._id } },
       ACCESS_SECRET,
       {
-        expiresIn: "5m",
+        expiresIn: "5h",
       }
     );
     console.log(token);
