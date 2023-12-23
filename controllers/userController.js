@@ -42,7 +42,7 @@ const joinUserFindID = async (req, res) => {
   }
 };
 
-//localhost:4000/user/postuser -> post방식으로
+//localhost:4000/mypage/postuser -> post방식으로
 const postMyPage = async (req, res) => {
   try {
     const { userData, token } = req.body;
@@ -83,7 +83,7 @@ const postMyPage = async (req, res) => {
   }
 };
 
-//localhost:4000/user/getuser -> get방식으로
+//localhost:4000/mypage/getuser -> get방식으로
 const getMyPage = async (req, res) => {
   try {
     const authorizationHeader = req.headers.authorization;
@@ -96,7 +96,9 @@ const getMyPage = async (req, res) => {
     const decoded = jwt.verify(token, ACCESS_SECRET);
 
     // decoded에는 토큰에 저장된 정보가 들어있습니다. 이 정보를 사용하여 데이터베이스에서 사용자 정보를 조회합니다.
-    const userDataFromDB = await User.findOne(decoded.user_id);
+    const userDataFromDB = await User.findOne({
+      _id: decoded.user._id,
+    });
 
     if (userDataFromDB) {
       res.status(200).json(userDataFromDB);
@@ -140,7 +142,6 @@ const loginUser = async (req, res) => {
         expiresIn: "5h",
       }
     );
-    console.log(token);
     if (!token) {
       return res.status(500).json({
         loginSuccess: false,
@@ -182,10 +183,9 @@ const cookieJwtAuth = async (req, res, next) => {
 const authJwt = async (req, res, next) => {
   try {
     const token = req.body.token;
-    console.log(token);
+
     const decoded = jwt.verify(token, ACCESS_SECRET);
     if (!decoded) return res.status(400).json("XX");
-    console.log(decoded.user._id);
     const checkUser = await User.findOne({ _id: decoded.user._id });
     if (checkUser) {
       res.status(200).json("토큰 유효 인증 성공");
